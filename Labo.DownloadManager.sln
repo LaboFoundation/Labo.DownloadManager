@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager", "Labo.DownloadManager\Labo.DownloadManager.csproj", "{2B9CD4E3-F915-45A2-87DA-820F1519FE78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Tests", "Labo.DownloadManager.Tests\Labo.DownloadManager.Tests.csproj", "{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B9CD4E3-F915-45A2-87DA-820F1519FE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B9CD4E3-F915-45A2-87DA-820F1519FE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B9CD4E3-F915-45A2-87DA-820F1519FE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B9CD4E3-F915-45A2-87DA-820F1519FE78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
