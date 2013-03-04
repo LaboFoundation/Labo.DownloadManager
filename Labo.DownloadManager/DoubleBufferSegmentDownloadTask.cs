@@ -40,6 +40,29 @@ namespace Labo.DownloadManager
 
             (m_Threads[0] = new Thread(DownloadSegment)).Start();
             (m_Threads[1] = new Thread(WriteSegment)).Start();
+
+            Shutdown(true);
+        }
+
+        public void Shutdown(bool waitAllThreads)
+        {
+            if (waitAllThreads)
+            {
+                for (int i = 0; i < m_Threads.Length; i++)
+                {
+                    Thread thread = m_Threads[i];
+                    thread.Join();
+                }
+            }
+
+            for (int i = 0; i < m_Threads.Length; i++)
+            {
+                Thread thread = m_Threads[i];
+                thread.Abort();
+
+                m_Threads[i] = null;
+            }
+
         }
 
         private void DownloadSegment()
@@ -63,7 +86,7 @@ namespace Labo.DownloadManager
                 lock (m_SegmentDownloader)
                 {
                     int size = m_SegmentDownloader.Download(buffer);
-                    m_SegmentDownloader.IncreaseCurrentPosition(size);
+                   
                     EnqueueWriteSegment(new SegmentDownloadInfo
                         {
                             Buffer = buffer,
@@ -71,9 +94,11 @@ namespace Labo.DownloadManager
                             Size = size
                         });
 
+                    m_SegmentDownloader.IncreaseCurrentPosition(size);
                     if (m_SegmentDownloader.IsDownloadFinished)
                     {
                         EnqueueWriteSegment(null);
+                        return;
                     }
                 }
             }
@@ -84,6 +109,7 @@ namespace Labo.DownloadManager
             lock (m_SegmentWriterLocker)
             {
                 m_OutputBufferQueue.Enqueue(segmentDownloadInfo);
+                Monitor.Pulse(m_SegmentWriterLocker);
             }
         }
 
@@ -92,6 +118,7 @@ namespace Labo.DownloadManager
             lock (m_SegmentDownloaderLocker)
             {
                 m_InputBufferQueue.Enqueue(buffer);
+                Monitor.Pulse(m_SegmentDownloaderLocker);
             }
         }
 
@@ -118,7 +145,6 @@ namespace Labo.DownloadManager
                     m_SegmentWriter.Write(segmentDownloadInfo.CurrentPosition, segmentDownloadInfo.Buffer, segmentDownloadInfo.Size);
                     EnqueueDownloadSegment(new byte[m_BufferSize]);
                 }
-                
             }
         }
     }

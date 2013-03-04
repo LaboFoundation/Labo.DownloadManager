@@ -31,7 +31,17 @@ namespace Labo.DownloadManager
 
         public int Download(byte[] buffer)
         {
-            int readSize = m_Stream.Read(buffer, 0, buffer.Length);
+            int readLength;
+            if (buffer.Length + CurrentPosition > m_EndPosition)
+            {
+                readLength = (int)(m_EndPosition - CurrentPosition);
+            }
+            else
+            {
+                readLength = buffer.Length;
+            }
+
+            int readSize = m_Stream.Read(buffer, 0, readLength);
 
             if (readSize + CurrentPosition > m_EndPosition)
             {

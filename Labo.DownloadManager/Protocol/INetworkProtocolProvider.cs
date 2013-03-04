@@ -1,10 +1,10 @@
 using System.IO;
 
-namespace Labo.DownloadManager
+namespace Labo.DownloadManager.Protocol
 {
     public interface INetworkProtocolProvider
     {
-        RemoteFileInfo GetFileInfo(DownloadFile file);
+        RemoteFileInfo GetRemoteFileInfo(DownloadFile file);
 
         Stream CreateStream(DownloadFile file, long startPosition, long endPosition);
     }

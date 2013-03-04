@@ -45,8 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseSegmentDownloadTaskPerformanceTestFixture.cs" />
+    <Compile Include="BaseSegmentDownloadTaskTestFixture.cs" />
+    <Compile Include="DoubleBufferSegmentDownloadTaskTestFixture.cs" />
     <Compile Include="DownloadSegmentPositionsCalculatorTestFixture.cs" />
+    <Compile Include="DownloadStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\NetworkCredentialUserNameTestFixture.cs" />
+    <Compile Include="Protocol\NetworkProtocolProviderFactoryTestFixture.cs" />
+    <Compile Include="Protocol\UrlProtocolParserTestFixture.cs" />
+    <Compile Include="Protocol\WebRequestManagerTestFixture.cs" />
+    <Compile Include="SegmentDownloaderSimulator.cs" />
+    <Compile Include="SegmentDownloadTaskTestFixture.cs" />
+    <Compile Include="SegmentWriterSimulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Labo.DownloadManager\Labo.DownloadManager.csproj">

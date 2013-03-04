@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 
 namespace Labo.DownloadManager
@@ -17,7 +18,7 @@ namespace Labo.DownloadManager
 
                 do
                 {
-                    newFileName = string.Format("{0}{1}({2}){3}", Path.GetDirectoryName(fileName), fileNameWithoutExtension, count++, fileExtension);
+                    newFileName = string.Format(CultureInfo.CurrentCulture, "{0}{1}({2}){3}", Path.GetDirectoryName(fileName), fileNameWithoutExtension, count++, fileExtension);
                 }
                 while (File.Exists(newFileName));
 

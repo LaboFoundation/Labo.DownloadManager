@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Labo.DownloadManager.Protocol;
 
 namespace Labo.DownloadManager
 {
@@ -26,7 +27,7 @@ namespace Labo.DownloadManager
         public void StartDownload()
         {
             INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Url);
-            RemoteFileInfo remoteFileInfo = networkProtocolProvider.GetFileInfo(m_File);
+            RemoteFileInfo remoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(m_File);
             DownloadSegmentPositions[] segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(200, 5, m_SegmentCount, remoteFileInfo.FileSize);
             LocalFileInfo localFileInfo = m_LocalFileAllocator.AllocateFile(remoteFileInfo.FileName, remoteFileInfo.FileSize);
 

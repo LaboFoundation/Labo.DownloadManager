@@ -11,12 +11,14 @@ namespace Labo.DownloadManager
             {
                 return new[] { new DownloadSegmentPositions { StartPosition = 0, EndPosition = fileSize } };
             }
-            long segmentSize = fileSize / segmentCount;
-            while (segmentSize < minimumSegmentSize)
+
+            long segmentSize = fileSize/segmentCount;
+            while (segmentCount > 1 && segmentSize < minimumSegmentSize)
             {
+                segmentCount--; 
                 segmentSize = fileSize/segmentCount;
-                segmentCount--;
             }
+
             DownloadSegmentPositions[] segmentPositions = new DownloadSegmentPositions[segmentCount];
             for (int i = 0; i < segmentCount; i++)
             {

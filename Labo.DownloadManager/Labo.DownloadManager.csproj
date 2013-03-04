@@ -20,7 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\CodeAnalysisRules\default.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>D:\Projects\Labo.DownloadManager\CodeAnalysisRules\default.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>D:\Projects\Labo.DownloadManager\CodeAnalysisRules\default.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,13 +50,23 @@
     <Compile Include="IDownloadSegmentPositionsCalculator.cs" />
     <Compile Include="IDownloadTask.cs" />
     <Compile Include="IDownloadTaskQueue.cs" />
-    <Compile Include="INetworkProtocolProvider.cs" />
-    <Compile Include="INetworkProtocolProviderFactory.cs" />
+    <Compile Include="Protocol\Exceptions\NetworkProtocolProviderFactoryException.cs" />
+    <Compile Include="Protocol\Providers\FtpProtocolProvider.cs" />
+    <Compile Include="Protocol\Providers\HttpProtocolProvider.cs" />
+    <Compile Include="Protocol\INetworkProtocolProvider.cs" />
+    <Compile Include="Protocol\INetworkProtocolProviderFactory.cs" />
     <Compile Include="ISegmentDownloader.cs" />
     <Compile Include="ISegmentDownloadTask.cs" />
     <Compile Include="ISegmentWriter.cs" />
+    <Compile Include="Protocol\IUrlProtocolParser.cs" />
     <Compile Include="LocalFileInfo.cs" />
     <Compile Include="DefaultFileNameCorrector.cs" />
+    <Compile Include="Protocol\IWebRequestFactory.cs" />
+    <Compile Include="Protocol\IWebRequestManager.cs" />
+    <Compile Include="Protocol\NetworkCredentialUserName.cs" />
+    <Compile Include="Protocol\WebRequestManager.cs" />
+    <Compile Include="Protocol\NetworkProtocolProviderFactory.cs" />
+    <Compile Include="Protocol\WebRequestFactory.cs" />
     <Compile Include="SegmentDownloadManager.cs" />
     <Compile Include="SegmentDownloadTask.cs" />
     <Compile Include="SegmentWriter.cs" />
@@ -65,6 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteFileInfo.cs" />
     <Compile Include="SegmentDownloader.cs" />
+    <Compile Include="Protocol\UrlProtocolParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

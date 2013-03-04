@@ -4,9 +4,11 @@
     {
         private readonly ISegmentDownloader m_SegmentDownloader;
         private readonly ISegmentWriter m_SegmentWriter;
+        private readonly int m_BufferSize;
 
-        public SegmentDownloadTask(ISegmentDownloader segmentDownloader, ISegmentWriter segmentWriter)
+        public SegmentDownloadTask(int bufferSize, ISegmentDownloader segmentDownloader, ISegmentWriter segmentWriter)
         {
+            m_BufferSize = bufferSize;
             m_SegmentDownloader = segmentDownloader;
             m_SegmentWriter = segmentWriter;
         }
@@ -14,7 +16,7 @@
         public void Download()
         {
             int readSize;
-            byte[] buffer = new byte[8192];
+            byte[] buffer = new byte[m_BufferSize];
 
             do
             {
