@@ -47,6 +47,14 @@
     <Compile Include="DownloadSegmentPositions.cs" />
     <Compile Include="DownloadSegmentPositionsCalculator.cs" />
     <Compile Include="DownloadTaskQueue.cs" />
+    <Compile Include="EventAggregator\EventManager.cs" />
+    <Compile Include="EventAggregator\EventPublisher.cs" />
+    <Compile Include="EventAggregator\EventSubscriptionProvider.cs" />
+    <Compile Include="EventAggregator\IEventConsumer.cs" />
+    <Compile Include="EventAggregator\IEventManager.cs" />
+    <Compile Include="EventAggregator\IEventPublisher.cs" />
+    <Compile Include="EventAggregator\IEventSubscriber.cs" />
+    <Compile Include="EventAggregator\IEventSubscriptionProvider.cs" />
     <Compile Include="IDownloadSegmentPositionsCalculator.cs" />
     <Compile Include="IDownloadTask.cs" />
     <Compile Include="IDownloadTaskQueue.cs" />
@@ -79,6 +87,9 @@
     <Compile Include="RemoteFileInfo.cs" />
     <Compile Include="SegmentDownloader.cs" />
     <Compile Include="Protocol\UrlProtocolParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Settings\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -24,6 +24,14 @@ namespace Labo.DownloadManager
             get { return m_CurrentPosition; }
         }
 
+        public long RemainingTransfer
+        {
+            get
+            {
+                return (m_EndPosition <= 0 ? 0 : m_EndPosition - CurrentPosition);
+            }
+        }
+
         public bool IsDownloadFinished
         {
             get { return m_CurrentPosition >= m_EndPosition; }

@@ -7,6 +7,7 @@ namespace Labo.DownloadManager.Protocol
     {
         private readonly Regex m_UrlRegex = new Regex(@"^(?<proto>\w+)://[^/]+?", RegexOptions.Singleline | RegexOptions.Compiled);
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public string Parse(string url)
         {
             if (url == null)
