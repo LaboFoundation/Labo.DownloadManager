@@ -58,6 +58,7 @@
     <Compile Include="IDownloadSegmentPositionsCalculator.cs" />
     <Compile Include="IDownloadTask.cs" />
     <Compile Include="IDownloadTaskQueue.cs" />
+    <Compile Include="ISegmentDownloadRateCalculator.cs" />
     <Compile Include="Protocol\Exceptions\NetworkProtocolProviderFactoryException.cs" />
     <Compile Include="Protocol\Providers\FtpProtocolProvider.cs" />
     <Compile Include="Protocol\Providers\HttpProtocolProvider.cs" />
@@ -75,7 +76,9 @@
     <Compile Include="Protocol\WebRequestManager.cs" />
     <Compile Include="Protocol\NetworkProtocolProviderFactory.cs" />
     <Compile Include="Protocol\WebRequestFactory.cs" />
+    <Compile Include="SegmentDownloaderBase.cs" />
     <Compile Include="SegmentDownloadManager.cs" />
+    <Compile Include="SegmentDownloadRateCalculator.cs" />
     <Compile Include="SegmentDownloadTask.cs" />
     <Compile Include="SegmentWriter.cs" />
     <Compile Include="TempFileAllocator.cs" />

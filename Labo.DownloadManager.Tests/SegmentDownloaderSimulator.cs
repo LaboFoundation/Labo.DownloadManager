@@ -2,27 +2,37 @@
 
 namespace Labo.DownloadManager.Tests
 {
-    public sealed class SegmentDownloaderSimulator : ISegmentDownloader
+    public sealed class SegmentDownloaderSimulator : SegmentDownloaderBase
     {
         private readonly ISegmentDownloader m_SegmentDownloader;
 
-        public long CurrentPosition
+        public override long CurrentPosition
         {
             get { return m_SegmentDownloader.CurrentPosition; }
         }
 
-        public bool IsDownloadFinished
+        public override double? DownloadRate
         {
-            get { return m_SegmentDownloader.IsDownloadFinished; }
+            get { throw new System.NotImplementedException(); }
         }
 
-        public int Download(byte[] buffer)
+        public override long StartPosition
+        {
+            get { return m_SegmentDownloader.StartPosition; }
+        }
+
+        public override long EndPosition
+        {
+            get { return m_SegmentDownloader.EndPosition; }
+        }
+
+        public override int Download(byte[] buffer)
         {
             Thread.Sleep(2000);
             return m_SegmentDownloader.Download(buffer);
         }
 
-        public void IncreaseCurrentPosition(int size)
+        public override void IncreaseCurrentPosition(int size)
         {
             m_SegmentDownloader.IncreaseCurrentPosition(size);
         }

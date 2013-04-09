@@ -3,46 +3,56 @@ using System.IO;
 
 namespace Labo.DownloadManager
 {
-    public sealed class SegmentDownloader : ISegmentDownloader
+    public sealed class SegmentDownloader : SegmentDownloaderBase
     {
         private readonly Stream m_Stream;
+        private readonly ISegmentDownloadRateCalculator m_SegmentDownloadRateCalculator;
 
         private readonly long m_StartPosition;
         private long m_CurrentPosition;
         private readonly long m_EndPosition;
 
-        public SegmentDownloader(Stream stream, DownloadSegmentPositions downloadSegmentInfo)
+        public SegmentDownloader(Stream stream, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
         {
             m_Stream = stream;
+            m_SegmentDownloadRateCalculator = segmentDownloadRateCalculator;
             m_StartPosition = downloadSegmentInfo.StartPosition;
             m_EndPosition = downloadSegmentInfo.EndPosition;
-            m_CurrentPosition = m_StartPosition;
+            m_CurrentPosition = StartPosition;
         }
 
-        public long CurrentPosition
+        public override long CurrentPosition
         {
             get { return m_CurrentPosition; }
         }
 
-        public long RemainingTransfer
+        public override double? DownloadRate
         {
             get
             {
-                return (m_EndPosition <= 0 ? 0 : m_EndPosition - CurrentPosition);
+                lock (this)
+                {
+                    return m_SegmentDownloadRateCalculator.CalculateDownloadRate(CurrentPosition);
+                }
             }
         }
 
-        public bool IsDownloadFinished
+        public override long StartPosition
         {
-            get { return m_CurrentPosition >= m_EndPosition; }
+            get { return m_StartPosition; }
         }
 
-        public int Download(byte[] buffer)
+        public override long EndPosition
+        {
+            get { return m_EndPosition; }
+        }
+
+        public override int Download(byte[] buffer)
         {
             int readLength;
-            if (buffer.Length + CurrentPosition > m_EndPosition)
+            if (buffer.Length + CurrentPosition > EndPosition)
             {
-                readLength = (int)(m_EndPosition - CurrentPosition);
+                readLength = (int)(EndPosition - CurrentPosition);
             }
             else
             {
@@ -51,9 +61,9 @@ namespace Labo.DownloadManager
 
             int readSize = m_Stream.Read(buffer, 0, readLength);
 
-            if (readSize + CurrentPosition > m_EndPosition)
+            if (readSize + CurrentPosition > EndPosition)
             {
-                readSize = (int)(m_EndPosition - CurrentPosition);
+                readSize = (int)(EndPosition - CurrentPosition);
             }
 
             if (readSize < 0)
@@ -64,7 +74,7 @@ namespace Labo.DownloadManager
             return readSize;
         }
 
-        public void IncreaseCurrentPosition(int size)
+        public override void IncreaseCurrentPosition(int size)
         {
             m_CurrentPosition += size;
         }

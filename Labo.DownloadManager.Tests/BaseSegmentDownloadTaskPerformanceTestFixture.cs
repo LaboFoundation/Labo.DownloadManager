@@ -15,7 +15,7 @@ namespace Labo.DownloadManager.Tests
 
         protected override ISegmentDownloader CreateSegmentDownloader(Stream inputStream, DownloadSegmentPositions downloadSegmentPositions)
         {
-            return new SegmentDownloaderSimulator(new SegmentDownloader(inputStream, downloadSegmentPositions));
+            return new SegmentDownloaderSimulator(new SegmentDownloader(inputStream, downloadSegmentPositions, new SegmentDownloadRateCalculator(downloadSegmentPositions.StartPosition)));
         }
 
         protected override void BeforeDownload()

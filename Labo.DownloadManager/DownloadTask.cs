@@ -38,7 +38,8 @@ namespace Labo.DownloadManager
                 for (int i = 0; i < segmentPositionInfos.Length; i++)
                 {
                     DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];
-                    segmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(8192, new SegmentDownloader(networkProtocolProvider.CreateStream(m_File, segmentPosition.StartPosition, segmentPosition.EndPosition), segmentPosition), segmentWriter));
+                    Stream segmentDownloaderStream = networkProtocolProvider.CreateStream(m_File, segmentPosition.StartPosition, segmentPosition.EndPosition);
+                    segmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(8192, new SegmentDownloader(segmentDownloaderStream, segmentPosition, new SegmentDownloadRateCalculator(segmentPosition.StartPosition)), segmentWriter));
                 }
 
                 SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(segmentDownloadTasks);

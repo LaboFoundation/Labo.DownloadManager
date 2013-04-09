@@ -39,7 +39,7 @@ namespace Labo.DownloadManager.Tests
 
         protected virtual ISegmentDownloader CreateSegmentDownloader(Stream inputStream, DownloadSegmentPositions downloadSegmentPositions)
         {
-            return new SegmentDownloader(inputStream, downloadSegmentPositions);
+            return new SegmentDownloader(inputStream, downloadSegmentPositions, new SegmentDownloadRateCalculator(downloadSegmentPositions.StartPosition));
         }
 
         protected virtual void BeforeDownload()
