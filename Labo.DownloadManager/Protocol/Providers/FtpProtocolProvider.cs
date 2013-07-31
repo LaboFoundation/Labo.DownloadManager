@@ -12,7 +12,7 @@ namespace Labo.DownloadManager.Protocol.Providers
             m_WebRequestManager = webRequestManager;
         }
 
-        public RemoteFileInfo GetRemoteFileInfo(DownloadFile file)
+        public RemoteFileInfo GetRemoteFileInfo(DownloadFile file, out Stream stream)
         {
             RemoteFileInfo remoteFileInfo = new RemoteFileInfo();
             remoteFileInfo.AcceptRanges = true;
@@ -31,6 +31,8 @@ namespace Labo.DownloadManager.Protocol.Providers
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
             {
                 remoteFileInfo.LastModified = response.LastModified;
+
+                stream = response.GetResponseStream();
             }
 
             return remoteFileInfo;

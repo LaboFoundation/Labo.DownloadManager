@@ -53,7 +53,7 @@ namespace Labo.DownloadManager
                 {
                     if (m_Downloaders.Count == 0)
                     {
-                        Monitor.Wait(m_Locker);
+                        return;
                     }
                     downloader = m_Downloaders.Dequeue();
                 }

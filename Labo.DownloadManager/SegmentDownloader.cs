@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
+using Labo.DownloadManager.Protocol;
 
 namespace Labo.DownloadManager
 {
     public sealed class SegmentDownloader : SegmentDownloaderBase
     {
-        private readonly Stream m_Stream;
+        private volatile Stream m_Stream;
+        private readonly DownloadFile m_File;
+        private readonly INetworkProtocolProvider m_NetworkProtocolProvider;
         private readonly ISegmentDownloadRateCalculator m_SegmentDownloadRateCalculator;
 
         private readonly long m_StartPosition;
@@ -19,6 +22,13 @@ namespace Labo.DownloadManager
             m_StartPosition = downloadSegmentInfo.StartPosition;
             m_EndPosition = downloadSegmentInfo.EndPosition;
             m_CurrentPosition = StartPosition;
+        }
+
+        public SegmentDownloader(DownloadFile file, INetworkProtocolProvider networkProtocolProvider, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
+            : this(null, downloadSegmentInfo, segmentDownloadRateCalculator)
+        {
+            m_File = file;
+            m_NetworkProtocolProvider = networkProtocolProvider;
         }
 
         public override long CurrentPosition
@@ -47,6 +57,24 @@ namespace Labo.DownloadManager
             get { return m_EndPosition; }
         }
 
+        private Stream Stream
+        {
+            get
+            {
+                if (m_Stream == null)
+                {
+                    lock (this)
+                    {
+                        if (m_Stream == null)
+                        {
+                            m_Stream = m_NetworkProtocolProvider.CreateStream(m_File, m_StartPosition, m_EndPosition);
+                        }
+                    }
+                }
+                return m_Stream;
+            }
+        }
+
         public override int Download(byte[] buffer)
         {
             int readLength;
@@ -59,7 +87,7 @@ namespace Labo.DownloadManager
                 readLength = buffer.Length;
             }
 
-            int readSize = m_Stream.Read(buffer, 0, readLength);
+            int readSize = Stream.Read(buffer, 0, readLength);
 
             if (readSize + CurrentPosition > EndPosition)
             {

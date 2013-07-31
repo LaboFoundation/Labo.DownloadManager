@@ -47,6 +47,7 @@
     <Compile Include="DownloadSegmentPositions.cs" />
     <Compile Include="DownloadSegmentPositionsCalculator.cs" />
     <Compile Include="DownloadTaskQueue.cs" />
+    <Compile Include="EventAggregator\ActionEventConsumer.cs" />
     <Compile Include="EventAggregator\EventManager.cs" />
     <Compile Include="EventAggregator\EventPublisher.cs" />
     <Compile Include="EventAggregator\EventSubscriptionProvider.cs" />
@@ -55,10 +56,14 @@
     <Compile Include="EventAggregator\IEventPublisher.cs" />
     <Compile Include="EventAggregator\IEventSubscriber.cs" />
     <Compile Include="EventAggregator\IEventSubscriptionProvider.cs" />
+    <Compile Include="EventArgs\DownloadTaskFinishedEventArgs.cs" />
     <Compile Include="IDownloadSegmentPositionsCalculator.cs" />
+    <Compile Include="IDownloadStreamManager.cs" />
     <Compile Include="IDownloadTask.cs" />
     <Compile Include="IDownloadTaskQueue.cs" />
     <Compile Include="ISegmentDownloadRateCalculator.cs" />
+    <Compile Include="LocalFileDownloadStreamManager.cs" />
+    <Compile Include="MemoryDownloadStreamManager.cs" />
     <Compile Include="Protocol\Exceptions\NetworkProtocolProviderFactoryException.cs" />
     <Compile Include="Protocol\Providers\FtpProtocolProvider.cs" />
     <Compile Include="Protocol\Providers\HttpProtocolProvider.cs" />
@@ -81,6 +86,8 @@
     <Compile Include="SegmentDownloadRateCalculator.cs" />
     <Compile Include="SegmentDownloadTask.cs" />
     <Compile Include="SegmentWriter.cs" />
+    <Compile Include="Settings\IDownloadSettings.cs" />
+    <Compile Include="Settings\MemoryDownloadSettings.cs" />
     <Compile Include="TempFileAllocator.cs" />
     <Compile Include="DownloadFile.cs" />
     <Compile Include="DownloadTask.cs" />
@@ -91,9 +98,7 @@
     <Compile Include="SegmentDownloader.cs" />
     <Compile Include="Protocol\UrlProtocolParser.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Settings\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
