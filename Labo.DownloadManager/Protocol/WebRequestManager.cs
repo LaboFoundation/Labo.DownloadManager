@@ -12,7 +12,7 @@ namespace Labo.DownloadManager.Protocol
             m_WebRequestFactory = webRequestFactory;
         }
 
-        private static void SetCredentials(DownloadFile file, WebRequest webRequest)
+        private static void SetCredentials(DownloadFileInfo file, WebRequest webRequest)
         {
             if (file.Authenticate)
             {
@@ -21,7 +21,7 @@ namespace Labo.DownloadManager.Protocol
             }
         }
 
-        public WebRequest GetWebRequest(DownloadFile file)
+        public WebRequest GetWebRequest(DownloadFileInfo file)
         {
             WebRequest webRequest = m_WebRequestFactory.CreateRequest(new Uri(file.Url));
             webRequest.Timeout = 30000;

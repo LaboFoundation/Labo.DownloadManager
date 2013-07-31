@@ -4,6 +4,6 @@ namespace Labo.DownloadManager.Protocol
 {
     public interface IWebRequestManager
     {
-        WebRequest GetWebRequest(DownloadFile file);
+        WebRequest GetWebRequest(DownloadFileInfo file);
     }
 }

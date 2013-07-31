@@ -24,6 +24,8 @@ namespace Labo.DownloadManager
         {
             lock (m_Locker)
             {
+                downloadTask.ChangeState(DownloadTaskState.Queued);
+
                 m_DownloadTasks.Enqueue(downloadTask);
                 Monitor.Pulse(m_Locker);
             }

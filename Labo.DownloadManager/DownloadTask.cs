@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Labo.DownloadManager.EventAggregator;
+using Labo.DownloadManager.Events;
 using Labo.DownloadManager.Protocol;
 
 namespace Labo.DownloadManager
@@ -9,19 +11,38 @@ namespace Labo.DownloadManager
         private readonly INetworkProtocolProviderFactory m_NetworkProtocolProviderFactory;
         private readonly IDownloadSegmentPositionsCalculator m_DownloadSegmentCalculator;
         private readonly ILocalFileAllocator m_LocalFileAllocator;
-        private readonly DownloadFile m_File;
+        private readonly IEventManager m_EventManager;
+        private readonly DownloadFileInfo m_File;
         private readonly int m_SegmentCount;
+        private SegmentDownloadManager m_SegmentDownloadManager;
+
+        public DownloadTaskState State { get; private set; }
+
+        public bool IsWorking()
+        {
+            return State == DownloadTaskState.Working || State == DownloadTaskState.Prepared ||
+                   State == DownloadTaskState.WaitingForReconnect || State == DownloadTaskState.Preparing;
+        }
 
         public DownloadTask(INetworkProtocolProviderFactory networkProtocolProviderFactory, 
             IDownloadSegmentPositionsCalculator downloadSegmentCalculator, 
             ILocalFileAllocator localFileAllocator,
-            DownloadFile file, int segmentCount)
+            IEventManager eventManager,
+            DownloadFileInfo file)
         {
             m_NetworkProtocolProviderFactory = networkProtocolProviderFactory;
             m_DownloadSegmentCalculator = downloadSegmentCalculator;
             m_LocalFileAllocator = localFileAllocator;
+            m_EventManager = eventManager;
             m_File = file;
-            m_SegmentCount = segmentCount;
+            m_SegmentCount = file.SegmentCount;
+        }
+
+        public void ChangeState(DownloadTaskState downloadTaskState)
+        {
+            State = downloadTaskState;
+
+            m_EventManager.EventPublisher.Publish(new DownloadTaskStateChangedEventMessage(downloadTaskState));
         }
 
         public void StartDownload()
@@ -42,8 +63,8 @@ namespace Labo.DownloadManager
                     segmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(8192, new SegmentDownloader(segmentDownloaderStream, segmentPosition, new SegmentDownloadRateCalculator(segmentPosition.StartPosition)), segmentWriter));
                 }
 
-                SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(segmentDownloadTasks);
-                segmentDownloadManager.Start();
+                m_SegmentDownloadManager = new SegmentDownloadManager(segmentDownloadTasks);
+                m_SegmentDownloadManager.Start();
             }
         }
     }

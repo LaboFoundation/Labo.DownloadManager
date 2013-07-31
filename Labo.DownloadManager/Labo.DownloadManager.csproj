@@ -44,9 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DoubleBufferSegmentDownloadTask.cs" />
+    <Compile Include="DownloadManager.cs" />
+    <Compile Include="DownloadManagerRuntime.cs" />
     <Compile Include="DownloadSegmentPositions.cs" />
     <Compile Include="DownloadSegmentPositionsCalculator.cs" />
+    <Compile Include="DownloadTaskList.cs" />
     <Compile Include="DownloadTaskQueue.cs" />
+    <Compile Include="DownloadTaskState.cs" />
     <Compile Include="EventAggregator\EventManager.cs" />
     <Compile Include="EventAggregator\EventPublisher.cs" />
     <Compile Include="EventAggregator\EventSubscriptionProvider.cs" />
@@ -55,8 +59,10 @@
     <Compile Include="EventAggregator\IEventPublisher.cs" />
     <Compile Include="EventAggregator\IEventSubscriber.cs" />
     <Compile Include="EventAggregator\IEventSubscriptionProvider.cs" />
+    <Compile Include="Events\DownloadTaskStateChangedEventMessage.cs" />
     <Compile Include="IDownloadSegmentPositionsCalculator.cs" />
     <Compile Include="IDownloadTask.cs" />
+    <Compile Include="IDownloadTaskList.cs" />
     <Compile Include="IDownloadTaskQueue.cs" />
     <Compile Include="ISegmentDownloadRateCalculator.cs" />
     <Compile Include="Protocol\Exceptions\NetworkProtocolProviderFactoryException.cs" />
@@ -82,7 +88,7 @@
     <Compile Include="SegmentDownloadTask.cs" />
     <Compile Include="SegmentWriter.cs" />
     <Compile Include="TempFileAllocator.cs" />
-    <Compile Include="DownloadFile.cs" />
+    <Compile Include="DownloadFileInfo.cs" />
     <Compile Include="DownloadTask.cs" />
     <Compile Include="IFileNameCorrector.cs" />
     <Compile Include="ILocalFileAllocator.cs" />

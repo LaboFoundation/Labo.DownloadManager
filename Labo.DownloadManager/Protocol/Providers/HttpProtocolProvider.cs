@@ -13,10 +13,11 @@ namespace Labo.DownloadManager.Protocol.Providers
             m_WebRequestManager = webRequestManager;
         }
 
-        public RemoteFileInfo GetRemoteFileInfo(DownloadFile file)
+        public RemoteFileInfo GetRemoteFileInfo(DownloadFileInfo file)
         {
             RemoteFileInfo remoteFileInfo = new RemoteFileInfo();
             WebRequest webRequest = m_WebRequestManager.GetWebRequest(file);
+            webRequest.Method = "HEAD";
 
             HttpWebResponse httpWebResponse = (HttpWebResponse) webRequest.GetResponse();
             remoteFileInfo.LastModified = httpWebResponse.LastModified;
@@ -26,7 +27,7 @@ namespace Labo.DownloadManager.Protocol.Providers
             return remoteFileInfo;
         }
 
-        public Stream CreateStream(DownloadFile file, long startPosition, long endPosition)
+        public Stream CreateStream(DownloadFileInfo file, long startPosition, long endPosition)
         {
             HttpWebRequest request = (HttpWebRequest)m_WebRequestManager.GetWebRequest(file);
 

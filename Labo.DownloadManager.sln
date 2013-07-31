@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager", "Lab
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Tests", "Labo.DownloadManager.Tests\Labo.DownloadManager.Tests.csproj", "{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Win.UI", "Labo.DownloadManager.Win.UI\Labo.DownloadManager.Win.UI.csproj", "{9F718B52-018D-481C-9585-8E72AAC6A620}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Tests.FileServer", "Labo.DownloadManager.Tests.FileServer\Labo.DownloadManager.Tests.FileServer.csproj", "{58871737-A389-45A3-A13F-51DFF84A41C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8A26ABD-56F4-48E6-A00C-397CDDFA8F61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F718B52-018D-481C-9585-8E72AAC6A620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F718B52-018D-481C-9585-8E72AAC6A620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F718B52-018D-481C-9585-8E72AAC6A620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F718B52-018D-481C-9585-8E72AAC6A620}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58871737-A389-45A3-A13F-51DFF84A41C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58871737-A389-45A3-A13F-51DFF84A41C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58871737-A389-45A3-A13F-51DFF84A41C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58871737-A389-45A3-A13F-51DFF84A41C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
