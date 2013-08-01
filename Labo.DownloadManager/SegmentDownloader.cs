@@ -7,7 +7,7 @@ namespace Labo.DownloadManager
     public sealed class SegmentDownloader : SegmentDownloaderBase
     {
         private volatile Stream m_Stream;
-        private readonly DownloadFile m_File;
+        private readonly DownloadFileInfo m_File;
         private readonly INetworkProtocolProvider m_NetworkProtocolProvider;
         private readonly ISegmentDownloadRateCalculator m_SegmentDownloadRateCalculator;
 
@@ -24,7 +24,7 @@ namespace Labo.DownloadManager
             m_CurrentPosition = StartPosition;
         }
 
-        public SegmentDownloader(DownloadFile file, INetworkProtocolProvider networkProtocolProvider, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
+        public SegmentDownloader(DownloadFileInfo file, INetworkProtocolProvider networkProtocolProvider, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
             : this(null, downloadSegmentInfo, segmentDownloadRateCalculator)
         {
             m_File = file;

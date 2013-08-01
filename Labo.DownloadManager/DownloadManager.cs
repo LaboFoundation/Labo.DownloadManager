@@ -1,4 +1,6 @@
-﻿namespace Labo.DownloadManager
+﻿using Labo.DownloadManager.Settings;
+
+namespace Labo.DownloadManager
 {
     public sealed class DownloadManager
     {
@@ -15,8 +17,9 @@
         {
             AddNewDownloadTask(new DownloadTask(DownloadManagerRuntime.NetworkProtocolProviderFactory,
                                                 DownloadManagerRuntime.DownloadSegmentPositionsCalculator,
-                                                DownloadManagerRuntime.LocalFileAllocator,
-                                                DownloadManagerRuntime.EventManager, downloadFileInfo));
+                                                new LocalFileDownloadStreamManager(new TempFileAllocator(new DefaultFileNameCorrector())),
+                                                new MemoryDownloadSettings(200, 5, 8096), 
+                                                downloadFileInfo, DownloadManagerRuntime.EventManager));
         }
 
         internal void AddNewDownloadTask(IDownloadTask downloadTask)
