@@ -8,6 +8,11 @@ namespace Labo.DownloadManager.Protocol.Providers
     {
         private readonly IWebRequestManager m_WebRequestManager;
 
+        static HttpProtocolProvider()
+        {
+            ServicePointManager.DefaultConnectionLimit = int.MaxValue;
+        }
+
         public HttpProtocolProvider(IWebRequestManager webRequestManager)
         {
             m_WebRequestManager = webRequestManager;
@@ -17,7 +22,6 @@ namespace Labo.DownloadManager.Protocol.Providers
         {
             RemoteFileInfo remoteFileInfo = new RemoteFileInfo();
             WebRequest webRequest = m_WebRequestManager.GetWebRequest(file);
-            webRequest.Method = "HEAD";
 
             HttpWebResponse httpWebResponse = (HttpWebResponse) webRequest.GetResponse();
             remoteFileInfo.LastModified = httpWebResponse.LastModified;
@@ -31,7 +35,6 @@ namespace Labo.DownloadManager.Protocol.Providers
         public Stream CreateStream(DownloadFileInfo file, long startPosition, long endPosition)
         {
             HttpWebRequest request = (HttpWebRequest)m_WebRequestManager.GetWebRequest(file);
-            request.ServicePoint.ConnectionLimit = 5;
 
             if (startPosition != 0)
             {

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Labo.DownloadManager.EventAggregator;
-using Labo.DownloadManager.Events;
-using System.Net;
 using Labo.DownloadManager.EventArgs;
 using Labo.DownloadManager.Protocol;
 using Labo.DownloadManager.Settings;
@@ -30,7 +28,7 @@ namespace Labo.DownloadManager
                            IDownloadSegmentPositionsCalculator downloadSegmentCalculator,
                            IDownloadStreamManager downloadStreamManager,
                            IDownloadSettings settings,
-                           DownloadFileInfo file, 
+                           DownloadFileInfo file,
                            IEventManager eventManager)
         {
             m_NetworkProtocolProviderFactory = networkProtocolProviderFactory;
@@ -57,28 +55,26 @@ namespace Labo.DownloadManager
         {
             INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Url);
 
-                RemoteFileInfo remoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(m_File);
+            RemoteFileInfo remoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(m_File);
 
-                int maximumSegmentCount = m_Settings.MaximumSegmentCount;
-                ServicePointManager.DefaultConnectionLimit = maximumSegmentCount;
+            DownloadSegmentPositions[] segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);
 
-                DownloadSegmentPositions[] segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, maximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);
-
-                using (Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo))
+            using (Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo))
+            {
+                SegmentWriter segmentWriter = new SegmentWriter(stream);
+                IList<ISegmentDownloadTask> segmentDownloadTasks = new List<ISegmentDownloadTask>(segmentPositionInfos.Length);
+                for (int i = 0; i < segmentPositionInfos.Length; i++)
                 {
-                    SegmentWriter segmentWriter = new SegmentWriter(stream);
-                    IList<ISegmentDownloadTask> segmentDownloadTasks = new List<ISegmentDownloadTask>(segmentPositionInfos.Length);
-                    for (int i = 0; i < segmentPositionInfos.Length; i++)
-                    {
-                        DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];         
-                        segmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(m_Settings.DownloadBufferSize, new SegmentDownloader(m_File, networkProtocolProvider, segmentPosition, new SegmentDownloadRateCalculator(segmentPosition.StartPosition)), segmentWriter));
-                    }
-
-                    SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(segmentDownloadTasks);
-                    segmentDownloadManager.Start();
-
-                    m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventArgs(stream, remoteFileInfo));
+                    DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];
+                    segmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(m_Settings.DownloadBufferSize, new SegmentDownloader(m_File, networkProtocolProvider, segmentPosition, new SegmentDownloadRateCalculator(segmentPosition.StartPosition)), segmentWriter));
                 }
+
+                SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(segmentDownloadTasks);
+                segmentDownloadManager.Start();
+                segmentDownloadManager.Finish(true);
+
+                m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventMessage(this, stream, remoteFileInfo));
             }
         }
     }
+}

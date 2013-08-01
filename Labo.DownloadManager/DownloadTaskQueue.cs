@@ -61,7 +61,7 @@ namespace Labo.DownloadManager
                 IDownloadTask downloadTask;
                 lock (m_Locker)
                 {
-                    if (m_DownloadTasks.Count == 0)
+                    while (m_DownloadTasks.Count == 0)
                     {
                         Monitor.Wait(m_Locker);
                     }

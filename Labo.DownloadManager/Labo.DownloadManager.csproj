@@ -60,8 +60,8 @@
     <Compile Include="EventAggregator\IEventPublisher.cs" />
     <Compile Include="EventAggregator\IEventSubscriber.cs" />
     <Compile Include="EventAggregator\IEventSubscriptionProvider.cs" />
-    <Compile Include="Events\DownloadTaskStateChangedEventMessage.cs" />
-    <Compile Include="EventArgs\DownloadTaskFinishedEventArgs.cs" />
+    <Compile Include="EventArgs\DownloadTaskStateChangedEventMessage.cs" />
+    <Compile Include="EventArgs\DownloadTaskFinishedEventMessage.cs" />
     <Compile Include="IDownloadSegmentPositionsCalculator.cs" />
     <Compile Include="IDownloadStreamManager.cs" />
     <Compile Include="IDownloadTask.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="SegmentDownloadTask.cs" />
     <Compile Include="SegmentWriter.cs" />
     <Compile Include="Settings\IDownloadSettings.cs" />
-    <Compile Include="Settings\MemoryDownloadSettings.cs" />
+    <Compile Include="Settings\InMemoryDownloadSettings.cs" />
     <Compile Include="TempFileAllocator.cs" />
     <Compile Include="DownloadFileInfo.cs" />
     <Compile Include="DownloadTask.cs" />

@@ -36,11 +36,28 @@ namespace Labo.DownloadManager
                 Thread worker = m_Workers[i];
                 worker.Start();
             }
+        }
 
+        public void Finish(bool waitForDownloads)
+        {
+            for (int i = 0; i < m_Workers.Length; i++)
+            {
+                EnqueueDownloader(null);
+            }
+
+            if (waitForDownloads)
+            {
+                for (int i = 0; i < m_Workers.Length; i++)
+                {
+                    Thread worker = m_Workers[i];
+                    worker.Join();
+                }
+            }
+          
             for (int i = 0; i < m_Workers.Length; i++)
             {
                 Thread worker = m_Workers[i];
-                worker.Join();
+                worker.Abort();
             }
         }
 
@@ -51,9 +68,9 @@ namespace Labo.DownloadManager
                 ISegmentDownloadTask downloader;
                 lock (m_Locker)
                 {
-                    if (m_Downloaders.Count == 0)
+                    while (m_Downloaders.Count == 0)
                     {
-                        return;
+                        Monitor.Wait(m_Locker);
                     }
                     downloader = m_Downloaders.Dequeue();
                 }

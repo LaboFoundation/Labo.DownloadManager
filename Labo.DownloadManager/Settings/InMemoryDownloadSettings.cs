@@ -1,12 +1,12 @@
 namespace Labo.DownloadManager.Settings
 {
-    public sealed class MemoryDownloadSettings : IDownloadSettings
+    public sealed class InMemoryDownloadSettings : IDownloadSettings
     {
         private readonly int m_MinimumSegmentSize;
         private readonly int m_MaximumSegmentCount;
         private readonly int m_DownloadBufferSize;
 
-        public MemoryDownloadSettings(int minimumSegmentSize, int maximumSegmentCount, int downloadBufferSize)
+        public InMemoryDownloadSettings(int minimumSegmentSize, int maximumSegmentCount, int downloadBufferSize)
         {
             m_MinimumSegmentSize = minimumSegmentSize;
             m_MaximumSegmentCount = maximumSegmentCount;

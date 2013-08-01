@@ -2,10 +2,11 @@
 
 namespace Labo.DownloadManager.EventArgs
 {
-    public sealed class DownloadTaskFinishedEventArgs
+    public sealed class DownloadTaskFinishedEventMessage
     {
-        public DownloadTaskFinishedEventArgs(Stream downloadStream, RemoteFileInfo remoteFileInfo)
+        public DownloadTaskFinishedEventMessage(IDownloadTask downloadTask, Stream downloadStream, RemoteFileInfo remoteFileInfo)
         {
+            DownloadTask = downloadTask;
             RemoteFileInfo = remoteFileInfo;
             DownloadStream = downloadStream;
         }
@@ -13,5 +14,7 @@ namespace Labo.DownloadManager.EventArgs
         public Stream DownloadStream { get; private set; }
 
         public RemoteFileInfo RemoteFileInfo { get; private set; }
+
+        public IDownloadTask DownloadTask { get; private set; }
     }
 }

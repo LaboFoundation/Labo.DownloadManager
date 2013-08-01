@@ -6,11 +6,13 @@ namespace Labo.DownloadManager
     {
         private readonly IDownloadTaskList m_DownloadTaskList;
         private readonly DownloadTaskQueue m_DownloadTaskQueue;
+        private readonly IDownloadSettings m_DownloadSettings;
 
         public DownloadManager()
         {
             m_DownloadTaskList = new DownloadTaskList();
             m_DownloadTaskQueue = new DownloadTaskQueue(5);
+            m_DownloadSettings = new InMemoryDownloadSettings(200, 5, 8096);
         }
 
         public void AddNewDownloadTask(DownloadFileInfo downloadFileInfo)
@@ -18,8 +20,9 @@ namespace Labo.DownloadManager
             AddNewDownloadTask(new DownloadTask(DownloadManagerRuntime.NetworkProtocolProviderFactory,
                                                 DownloadManagerRuntime.DownloadSegmentPositionsCalculator,
                                                 new LocalFileDownloadStreamManager(new TempFileAllocator(new DefaultFileNameCorrector())),
-                                                new MemoryDownloadSettings(200, 5, 8096), 
-                                                downloadFileInfo, DownloadManagerRuntime.EventManager));
+                                                m_DownloadSettings, 
+                                                downloadFileInfo, 
+                                                DownloadManagerRuntime.EventManager));
         }
 
         internal void AddNewDownloadTask(IDownloadTask downloadTask)

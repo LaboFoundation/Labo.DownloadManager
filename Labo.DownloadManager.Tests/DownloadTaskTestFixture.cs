@@ -25,12 +25,14 @@ namespace Labo.DownloadManager.Tests
             DownloadTask downloadTask = new DownloadTask(networkProtocolProviderFactory,
                                                           new DownloadSegmentPositionsCalculator(),
                                                           new MemoryDownloadStreamManager(stream),
-                                                          new MemoryDownloadSettings(200, 5, 8096), new DownloadFileInfo
+                                                          new InMemoryDownloadSettings(200, 5, 8096),
+                                                          new DownloadFileInfo
                                                               {
-                                                                  Url = "https://androidnetworktester.googlecode.com/files/1mb.txt"
+                                                                  Url = "https://androidnetworktester.googlecode.com/files/1mb.txt",
+                                                                  SegmentCount = 5
                                                               }, new EventManager());
 
-            downloadTask.EventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventArgs>(x =>
+            downloadTask.EventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventMessage>(x =>
                 {
                     string txt = Encoding.UTF8.GetString(stream.ToArray());
                     txt.ToString();

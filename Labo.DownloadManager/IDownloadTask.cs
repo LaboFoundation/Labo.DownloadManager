@@ -5,6 +5,9 @@ namespace Labo.DownloadManager
         void StartDownload();
 
         bool IsWorking();
+
         void ChangeState(DownloadTaskState downloadTaskState);
+
+        DownloadTaskState State { get; }
     }
 }

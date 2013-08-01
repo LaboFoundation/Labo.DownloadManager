@@ -72,7 +72,7 @@ namespace Labo.DownloadManager
                 byte[] buffer;
                 lock (m_SegmentDownloaderLocker)
                 {
-                    if (m_InputBufferQueue.Count == 0)
+                    while (m_InputBufferQueue.Count == 0)
                     {
                         Monitor.Wait(m_SegmentDownloaderLocker);
                     }
@@ -129,7 +129,7 @@ namespace Labo.DownloadManager
                 SegmentDownloadInfo segmentDownloadInfo;
                 lock (m_SegmentWriterLocker)
                 {
-                    if (m_OutputBufferQueue.Count == 0)
+                    while (m_OutputBufferQueue.Count == 0)
                     {
                         Monitor.Wait(m_SegmentWriterLocker);
                     }

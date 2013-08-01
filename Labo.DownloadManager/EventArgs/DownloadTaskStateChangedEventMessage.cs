@@ -1,4 +1,4 @@
-﻿namespace Labo.DownloadManager.Events
+﻿namespace Labo.DownloadManager.EventArgs
 {
     public sealed class DownloadTaskStateChangedEventMessage
     {
