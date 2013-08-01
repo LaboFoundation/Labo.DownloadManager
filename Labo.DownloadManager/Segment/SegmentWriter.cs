@@ -1,12 +1,10 @@
-using System.IO;
-
-namespace Labo.DownloadManager
+namespace Labo.DownloadManager.Segment
 {
     public sealed class SegmentWriter : ISegmentWriter
     {
-        private readonly Stream m_Stream;
+        private readonly System.IO.Stream m_Stream;
 
-        public SegmentWriter(Stream stream)
+        public SegmentWriter(System.IO.Stream stream)
         {
             m_Stream = stream;
         }

@@ -6,6 +6,6 @@ namespace Labo.DownloadManager
 
         void Start();
 
-        void Shutdown();
+        void Shutdown(bool waitForDownloads);
     }
 }

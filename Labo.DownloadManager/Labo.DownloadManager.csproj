@@ -43,11 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DoubleBufferSegmentDownloadTask.cs" />
+    <Compile Include="DownloadTaskInfo.cs" />
+    <Compile Include="Segment\DoubleBufferSegmentDownloadTask.cs" />
     <Compile Include="DownloadManager.cs" />
     <Compile Include="DownloadManagerRuntime.cs" />
-    <Compile Include="DownloadSegmentPositions.cs" />
-    <Compile Include="DownloadSegmentPositionsCalculator.cs" />
+    <Compile Include="Segment\DownloadSegmentPositions.cs" />
+    <Compile Include="Segment\DownloadSegmentPositionsCalculator.cs" />
     <Compile Include="DownloadTaskList.cs" />
     <Compile Include="DownloadTaskQueue.cs" />
     <Compile Include="DownloadTaskState.cs" />
@@ -62,22 +63,22 @@
     <Compile Include="EventAggregator\IEventSubscriptionProvider.cs" />
     <Compile Include="EventArgs\DownloadTaskStateChangedEventMessage.cs" />
     <Compile Include="EventArgs\DownloadTaskFinishedEventMessage.cs" />
-    <Compile Include="IDownloadSegmentPositionsCalculator.cs" />
-    <Compile Include="IDownloadStreamManager.cs" />
+    <Compile Include="Segment\IDownloadSegmentPositionsCalculator.cs" />
+    <Compile Include="Streaming\IDownloadStreamManager.cs" />
     <Compile Include="IDownloadTask.cs" />
     <Compile Include="IDownloadTaskList.cs" />
     <Compile Include="IDownloadTaskQueue.cs" />
-    <Compile Include="ISegmentDownloadRateCalculator.cs" />
-    <Compile Include="LocalFileDownloadStreamManager.cs" />
-    <Compile Include="MemoryDownloadStreamManager.cs" />
+    <Compile Include="Segment\ISegmentDownloadRateCalculator.cs" />
+    <Compile Include="Streaming\LocalFileDownloadStreamManager.cs" />
+    <Compile Include="Streaming\MemoryDownloadStreamManager.cs" />
     <Compile Include="Protocol\Exceptions\NetworkProtocolProviderFactoryException.cs" />
     <Compile Include="Protocol\Providers\FtpProtocolProvider.cs" />
     <Compile Include="Protocol\Providers\HttpProtocolProvider.cs" />
     <Compile Include="Protocol\INetworkProtocolProvider.cs" />
     <Compile Include="Protocol\INetworkProtocolProviderFactory.cs" />
-    <Compile Include="ISegmentDownloader.cs" />
-    <Compile Include="ISegmentDownloadTask.cs" />
-    <Compile Include="ISegmentWriter.cs" />
+    <Compile Include="Segment\ISegmentDownloader.cs" />
+    <Compile Include="Segment\ISegmentDownloadTask.cs" />
+    <Compile Include="Segment\ISegmentWriter.cs" />
     <Compile Include="Protocol\IUrlProtocolParser.cs" />
     <Compile Include="LocalFileInfo.cs" />
     <Compile Include="DefaultFileNameCorrector.cs" />
@@ -87,11 +88,11 @@
     <Compile Include="Protocol\WebRequestManager.cs" />
     <Compile Include="Protocol\NetworkProtocolProviderFactory.cs" />
     <Compile Include="Protocol\WebRequestFactory.cs" />
-    <Compile Include="SegmentDownloaderBase.cs" />
-    <Compile Include="SegmentDownloadManager.cs" />
-    <Compile Include="SegmentDownloadRateCalculator.cs" />
-    <Compile Include="SegmentDownloadTask.cs" />
-    <Compile Include="SegmentWriter.cs" />
+    <Compile Include="Segment\SegmentDownloaderBase.cs" />
+    <Compile Include="Segment\SegmentDownloadManager.cs" />
+    <Compile Include="Segment\SegmentDownloadRateCalculator.cs" />
+    <Compile Include="Segment\SegmentDownloadTask.cs" />
+    <Compile Include="Segment\SegmentWriter.cs" />
     <Compile Include="Settings\IDownloadSettings.cs" />
     <Compile Include="Settings\InMemoryDownloadSettings.cs" />
     <Compile Include="TempFileAllocator.cs" />
@@ -101,7 +102,7 @@
     <Compile Include="ILocalFileAllocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteFileInfo.cs" />
-    <Compile Include="SegmentDownloader.cs" />
+    <Compile Include="Segment\SegmentDownloader.cs" />
     <Compile Include="Protocol\UrlProtocolParser.cs" />
   </ItemGroup>
   <ItemGroup />

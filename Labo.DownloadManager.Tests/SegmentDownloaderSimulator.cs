@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Labo.DownloadManager.Segment;
 
 namespace Labo.DownloadManager.Tests
 {

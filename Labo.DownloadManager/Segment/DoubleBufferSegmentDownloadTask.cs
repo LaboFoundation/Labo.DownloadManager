@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-namespace Labo.DownloadManager
+
+namespace Labo.DownloadManager.Segment
 {
     internal sealed class DoubleBufferSegmentDownloadTask : ISegmentDownloadTask
     {

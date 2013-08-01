@@ -1,6 +1,6 @@
 using System;
 
-namespace Labo.DownloadManager
+namespace Labo.DownloadManager.Segment
 {
     internal sealed class SegmentDownloadRateCalculator : ISegmentDownloadRateCalculator
     {

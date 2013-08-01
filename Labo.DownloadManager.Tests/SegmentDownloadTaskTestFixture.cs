@@ -1,3 +1,5 @@
+using Labo.DownloadManager.Segment;
+
 namespace Labo.DownloadManager.Tests
 {
     public class SegmentDownloadTaskTestFixture : BaseSegmentDownloadTaskTestFixture

@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Labo.DownloadManager
+namespace Labo.DownloadManager.Streaming
 {
     public interface IDownloadStreamManager
     {

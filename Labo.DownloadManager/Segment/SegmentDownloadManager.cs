@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 
-namespace Labo.DownloadManager
+namespace Labo.DownloadManager.Segment
 {
     public sealed class SegmentDownloadManager
     {

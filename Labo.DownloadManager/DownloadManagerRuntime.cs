@@ -1,5 +1,6 @@
 ﻿using Labo.DownloadManager.EventAggregator;
 using Labo.DownloadManager.Protocol;
+using Labo.DownloadManager.Segment;
 
 namespace Labo.DownloadManager
 {

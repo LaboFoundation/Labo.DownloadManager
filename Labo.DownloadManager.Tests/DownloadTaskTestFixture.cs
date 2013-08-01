@@ -1,11 +1,15 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Text;
+
 using Labo.DownloadManager.EventAggregator;
 using Labo.DownloadManager.EventArgs;
 using Labo.DownloadManager.Protocol;
 using Labo.DownloadManager.Protocol.Providers;
+using Labo.DownloadManager.Segment;
 using Labo.DownloadManager.Settings;
+using Labo.DownloadManager.Streaming;
+
 using NUnit.Framework;
 
 namespace Labo.DownloadManager.Tests
@@ -13,7 +17,7 @@ namespace Labo.DownloadManager.Tests
     [TestFixture]
     public class DownloadTaskTestFixture
     {
-        [Test]
+        [Test, Ignore("written to see what is happening")]
         public void Download()
         {
             MemoryStream stream = new MemoryStream();
@@ -25,7 +29,7 @@ namespace Labo.DownloadManager.Tests
             DownloadTask downloadTask = new DownloadTask(networkProtocolProviderFactory,
                                                           new DownloadSegmentPositionsCalculator(),
                                                           new MemoryDownloadStreamManager(stream),
-                                                          new InMemoryDownloadSettings(200, 5, 8096),
+                                                          new InMemoryDownloadSettings(200, 5, 8096, 5),
                                                           new DownloadFileInfo
                                                               {
                                                                   Url = "https://androidnetworktester.googlecode.com/files/1mb.txt",

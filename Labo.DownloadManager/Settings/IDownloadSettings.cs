@@ -7,5 +7,7 @@
         int MaximumSegmentCount { get; }
 
         int DownloadBufferSize { get; }
+
+        int MaximumConcurrentDownloads { get; }
     }
 }

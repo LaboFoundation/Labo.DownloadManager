@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using Labo.DownloadManager.Segment;
 using NUnit.Framework;
 namespace Labo.DownloadManager.Tests
 {

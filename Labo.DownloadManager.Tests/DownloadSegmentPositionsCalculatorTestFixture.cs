@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Labo.DownloadManager.Segment;
+using NUnit.Framework;
 
 namespace Labo.DownloadManager.Tests
 {

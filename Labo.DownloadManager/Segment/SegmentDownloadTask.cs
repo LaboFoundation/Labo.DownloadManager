@@ -1,4 +1,4 @@
-﻿namespace Labo.DownloadManager
+﻿namespace Labo.DownloadManager.Segment
 {
     public sealed class SegmentDownloadTask : ISegmentDownloadTask
     {

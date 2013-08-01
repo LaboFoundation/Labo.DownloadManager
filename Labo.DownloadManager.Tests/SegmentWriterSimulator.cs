@@ -1,4 +1,6 @@
 using System.Threading;
+using Labo.DownloadManager.Segment;
+
 namespace Labo.DownloadManager.Tests
 {
     public sealed class SegmentWriterSimulator : ISegmentWriter

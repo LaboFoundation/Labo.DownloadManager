@@ -5,13 +5,7 @@ namespace Labo.DownloadManager.Settings
         private readonly int m_MinimumSegmentSize;
         private readonly int m_MaximumSegmentCount;
         private readonly int m_DownloadBufferSize;
-
-        public InMemoryDownloadSettings(int minimumSegmentSize, int maximumSegmentCount, int downloadBufferSize)
-        {
-            m_MinimumSegmentSize = minimumSegmentSize;
-            m_MaximumSegmentCount = maximumSegmentCount;
-            m_DownloadBufferSize = downloadBufferSize;
-        }
+        private readonly int m_MaximumConcurrentDownloads;
 
         public int MinimumSegmentSize
         {
@@ -26,6 +20,19 @@ namespace Labo.DownloadManager.Settings
         public int DownloadBufferSize
         {
             get { return m_DownloadBufferSize; }
+        }
+
+        public int MaximumConcurrentDownloads
+        {
+            get { return m_MaximumConcurrentDownloads; }
+        }
+
+        public InMemoryDownloadSettings(int minimumSegmentSize, int maximumSegmentCount, int downloadBufferSize, int maximumConcurrentDownloads)
+        {
+            m_MinimumSegmentSize = minimumSegmentSize;
+            m_MaximumSegmentCount = maximumSegmentCount;
+            m_DownloadBufferSize = downloadBufferSize;
+            m_MaximumConcurrentDownloads = maximumConcurrentDownloads;
         }
     }
 }

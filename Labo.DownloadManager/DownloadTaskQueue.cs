@@ -24,9 +24,13 @@ namespace Labo.DownloadManager
         {
             lock (m_Locker)
             {
-                downloadTask.ChangeState(DownloadTaskState.Queued);
-
                 m_DownloadTasks.Enqueue(downloadTask);
+
+                if (downloadTask != null)
+                {
+                    downloadTask.ChangeState(DownloadTaskState.Queued);
+                }
+
                 Monitor.Pulse(m_Locker);
             }
         }
@@ -40,17 +44,28 @@ namespace Labo.DownloadManager
             }
         }
 
-        public void Shutdown()
+        public void Shutdown(bool waitForDownloads)
         {
             for (int i = 0; i < m_Workers.Length; i++)
             {
                 EnqueueDownloadTask(null);
             }
 
+            if (waitForDownloads)
+            {
+                for (int i = 0; i < m_Workers.Length; i++)
+                {
+                    Thread worker = m_Workers[i];
+                    worker.Join();
+                }
+            }
+
             for (int i = 0; i < m_Workers.Length; i++)
             {
                 Thread worker = m_Workers[i];
-                worker.Join();
+                worker.Abort();
+
+                m_Workers[i] = null;
             }
         }
 

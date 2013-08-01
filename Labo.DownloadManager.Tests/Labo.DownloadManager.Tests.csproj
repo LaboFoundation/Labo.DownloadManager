@@ -48,6 +48,7 @@
     <Compile Include="BaseSegmentDownloadTaskPerformanceTestFixture.cs" />
     <Compile Include="BaseSegmentDownloadTaskTestFixture.cs" />
     <Compile Include="DoubleBufferSegmentDownloadTaskTestFixture.cs" />
+    <Compile Include="DownloadManagerTestFixture.cs" />
     <Compile Include="DownloadSegmentPositionsCalculatorTestFixture.cs" />
     <Compile Include="DownloadStream.cs" />
     <Compile Include="DownloadTaskTestFixture.cs" />
