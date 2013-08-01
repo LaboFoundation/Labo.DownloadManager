@@ -50,6 +50,7 @@
     <Compile Include="DoubleBufferSegmentDownloadTaskTestFixture.cs" />
     <Compile Include="DownloadSegmentPositionsCalculatorTestFixture.cs" />
     <Compile Include="DownloadStream.cs" />
+    <Compile Include="DownloadTaskTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol\NetworkCredentialUserNameTestFixture.cs" />
     <Compile Include="Protocol\NetworkProtocolProviderFactoryTestFixture.cs" />

@@ -13,7 +13,11 @@ namespace Labo.DownloadManager.Protocol.Providers
             m_WebRequestManager = webRequestManager;
         }
 
+<<<<<<< HEAD
         public RemoteFileInfo GetRemoteFileInfo(DownloadFileInfo file)
+=======
+        public RemoteFileInfo GetRemoteFileInfo(DownloadFile file, out Stream stream)
+>>>>>>> 6bb4df88966e7f0c08b9450197079385b2b1d098
         {
             RemoteFileInfo remoteFileInfo = new RemoteFileInfo();
             WebRequest webRequest = m_WebRequestManager.GetWebRequest(file);
@@ -24,12 +28,16 @@ namespace Labo.DownloadManager.Protocol.Providers
             remoteFileInfo.MimeType = httpWebResponse.ContentType;
             remoteFileInfo.FileSize = httpWebResponse.ContentLength;
             remoteFileInfo.AcceptRanges = string.Compare(httpWebResponse.Headers["Accept-Ranges"], "bytes", StringComparison.OrdinalIgnoreCase) == 0;
+
+            stream = httpWebResponse.GetResponseStream();
+
             return remoteFileInfo;
         }
 
         public Stream CreateStream(DownloadFileInfo file, long startPosition, long endPosition)
         {
             HttpWebRequest request = (HttpWebRequest)m_WebRequestManager.GetWebRequest(file);
+            request.ServicePoint.ConnectionLimit = 5;
 
             if (startPosition != 0)
             {
