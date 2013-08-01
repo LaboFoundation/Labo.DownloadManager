@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DownloadHelper.cs" />
     <Compile Include="DownloadTaskInfo.cs" />
     <Compile Include="Segment\DoubleBufferSegmentDownloadTask.cs" />
     <Compile Include="DownloadManager.cs" />

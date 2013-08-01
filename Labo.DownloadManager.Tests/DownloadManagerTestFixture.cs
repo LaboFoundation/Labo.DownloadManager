@@ -16,7 +16,6 @@ namespace Labo.DownloadManager.Tests
         [Test, Ignore("written to see what is happening")]
         public void Download()
         {
-            MemoryStream stream = new MemoryStream();
             NetworkProtocolProviderFactory networkProtocolProviderFactory = new NetworkProtocolProviderFactory(new UrlProtocolParser());
             HttpProtocolProvider httpProtocolProvider = new HttpProtocolProvider(new WebRequestManager(new WebRequestFactory()));
             networkProtocolProviderFactory.RegisterProvider("http", httpProtocolProvider);
@@ -25,7 +24,7 @@ namespace Labo.DownloadManager.Tests
             EventManager eventManager = new EventManager();
             DownloadManager downloadManager = new DownloadManager(
                 new InMemoryDownloadSettings(200, 5, 8096, 5),
-                new MemoryDownloadStreamManager(stream),
+                new MemoryDownloadStreamManager(),
                 networkProtocolProviderFactory,
                 eventManager);
             downloadManager.Start();
@@ -43,7 +42,7 @@ namespace Labo.DownloadManager.Tests
                 }, true));
             eventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventMessage>(x =>
                 {
-                    string txt = Encoding.UTF8.GetString(stream.ToArray());
+                    string txt = Encoding.UTF8.GetString(((MemoryStream)x.DownloadStream).ToArray());
                     txt.ToString();
                 }));
 

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.IO;
 using Labo.DownloadManager.Protocol;
 
 namespace Labo.DownloadManager.Segment
 {
     public sealed class SegmentDownloader : SegmentDownloaderBase
     {
-        private volatile System.IO.Stream m_Stream;
+        private volatile Stream m_Stream;
         private readonly DownloadFileInfo m_File;
         private readonly INetworkProtocolProvider m_NetworkProtocolProvider;
         private readonly ISegmentDownloadRateCalculator m_SegmentDownloadRateCalculator;
@@ -14,7 +15,7 @@ namespace Labo.DownloadManager.Segment
         private long m_CurrentPosition;
         private readonly long m_EndPosition;
 
-        public SegmentDownloader(System.IO.Stream stream, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
+        public SegmentDownloader(Stream stream, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
         {
             m_Stream = stream;
             m_SegmentDownloadRateCalculator = segmentDownloadRateCalculator;
@@ -56,7 +57,7 @@ namespace Labo.DownloadManager.Segment
             get { return m_EndPosition; }
         }
 
-        private System.IO.Stream Stream
+        private Stream Stream
         {
             get
             {

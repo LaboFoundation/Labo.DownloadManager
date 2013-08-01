@@ -10,6 +10,8 @@
 
         public string Password { get; set; }
 
+        public string FileName { get; set; }
+
         public int SegmentCount { get; set; }
     }
 }
