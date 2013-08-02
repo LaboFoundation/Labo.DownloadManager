@@ -10,7 +10,7 @@ namespace Labo.DownloadManager.Segment
 
             if (fileSize <= minimumSegmentSize)
             {
-                return new[] { new DownloadSegmentPositions { StartPosition = 0, EndPosition = fileSize - 1 } };
+                return new[] { new DownloadSegmentPositions(0, fileSize - 1) };
             }
 
             long segmentSize = fileSize/segmentCount;
@@ -23,17 +23,17 @@ namespace Labo.DownloadManager.Segment
             DownloadSegmentPositions[] segmentPositions = new DownloadSegmentPositions[segmentCount];
             for (int i = 0; i < segmentCount; i++)
             {
-                DownloadSegmentPositions segmentPosition = new DownloadSegmentPositions();
-                segmentPosition.StartPosition = i*segmentSize;
+                long startPosition = i*segmentSize;
+                long endPosition;
                 if(i == segmentCount - 1)
                 {
-                    segmentPosition.EndPosition = fileSize - 1;
+                    endPosition = fileSize - 1;
                 }
                 else
                 {
-                    segmentPosition.EndPosition = segmentPosition.StartPosition + segmentSize;                    
+                    endPosition = startPosition + segmentSize - 1;                    
                 }
-                segmentPositions[i] = segmentPosition;
+                segmentPositions[i] = new DownloadSegmentPositions(startPosition, endPosition);
             }
             return segmentPositions;
         }

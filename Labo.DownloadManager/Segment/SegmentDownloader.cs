@@ -78,9 +78,9 @@ namespace Labo.DownloadManager.Segment
         public override int Download(byte[] buffer)
         {
             int readLength;
-            if (buffer.Length + CurrentPosition > EndPosition)
+            if (buffer.Length + CurrentPosition - 1 > EndPosition)
             {
-                readLength = (int)(EndPosition - CurrentPosition);
+                readLength = (int)(EndPosition - CurrentPosition + 1);
             }
             else
             {
@@ -89,9 +89,9 @@ namespace Labo.DownloadManager.Segment
 
             int readSize = Stream.Read(buffer, 0, readLength);
 
-            if (readSize + CurrentPosition > EndPosition)
+            if (readSize + CurrentPosition - 1 > EndPosition)
             {
-                readSize = (int)(EndPosition - CurrentPosition);
+                readSize = (int)(EndPosition - CurrentPosition + 1);
             }
 
             if (readSize < 0)
@@ -104,7 +104,10 @@ namespace Labo.DownloadManager.Segment
 
         public override void IncreaseCurrentPosition(int size)
         {
-            m_CurrentPosition += size;
+            lock (this)
+            {
+                m_CurrentPosition += size;
+            }
         }
     }
 }

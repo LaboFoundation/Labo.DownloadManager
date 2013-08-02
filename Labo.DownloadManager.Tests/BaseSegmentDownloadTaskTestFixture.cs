@@ -22,14 +22,14 @@ namespace Labo.DownloadManager.Tests
             DownloadStream inputStream = new DownloadStream(data);
 
             MemoryStream outputStream = new MemoryStream();
-            DownloadSegmentPositions downloadSegmentPositions = new DownloadSegmentPositions {StartPosition = 0, EndPosition = endPosition};
+            DownloadSegmentPositions downloadSegmentPositions = new DownloadSegmentPositions(0, endPosition);
 
             ISegmentDownloadTask task = CreateSegmentDownloadTask(bufferSize, CreateSegmentDownloader(inputStream, downloadSegmentPositions), CreateSegmentWriter(outputStream));
             task.Download();
 
             AfterDownload();
 
-            Assert.AreEqual(endPosition, inputStream.TotalDownloads);
+            Assert.AreEqual(endPosition + 1, inputStream.TotalDownloads);
             Assert.AreEqual(inputStream.ToArray().Take(endPosition).ToArray(), outputStream.ToArray().Take(endPosition).ToArray());
         }
 

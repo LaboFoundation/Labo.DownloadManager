@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="BaseSegmentDownloadTaskPerformanceTestFixture.cs" />
     <Compile Include="BaseSegmentDownloadTaskTestFixture.cs" />
+    <Compile Include="DoubleBufferSegmentDownloadManagerTestFixture.cs" />
     <Compile Include="DoubleBufferSegmentDownloadTaskTestFixture.cs" />
     <Compile Include="DownloadManagerTestFixture.cs" />
     <Compile Include="DownloadSegmentPositionsCalculatorTestFixture.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Protocol\UrlProtocolParserTestFixture.cs" />
     <Compile Include="Protocol\WebRequestManagerTestFixture.cs" />
     <Compile Include="SegmentDownloaderSimulator.cs" />
+    <Compile Include="BaseSegmentDownloadManagerTestFixture.cs" />
+    <Compile Include="SegmentDownloadManagerTestFixture.cs" />
     <Compile Include="SegmentDownloadTaskTestFixture.cs" />
     <Compile Include="SegmentWriterSimulator.cs" />
   </ItemGroup>
