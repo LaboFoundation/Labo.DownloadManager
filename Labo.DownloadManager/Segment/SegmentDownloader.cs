@@ -77,6 +77,11 @@ namespace Labo.DownloadManager.Segment
 
         public override int Download(byte[] buffer)
         {
+            if (EndPosition == -1)
+            {
+                return 0;
+            }
+
             int readLength;
             if (buffer.Length + CurrentPosition - 1 > EndPosition)
             {

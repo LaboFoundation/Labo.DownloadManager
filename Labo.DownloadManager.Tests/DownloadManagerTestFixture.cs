@@ -37,7 +37,7 @@ namespace Labo.DownloadManager.Tests
 
             downloadManager.AddNewDownloadTask(new DownloadTaskInfo(new DownloadFileInfo
                 {
-                    Url = "https://androidnetworktester.googlecode.com/files/1mb.txt",
+                    Url = "http://127.0.0.1:8552/1mb.txt",
                     SegmentCount = 5
                 }, true));
             eventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventMessage>(x =>

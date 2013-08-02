@@ -16,7 +16,7 @@ namespace Labo.DownloadManager.Segment
 
         public bool IsDownloadFinished
         {
-            get { return CurrentPosition > EndPosition; }
+            get { return EndPosition == -1 || CurrentPosition > EndPosition; }
         }
 
         public abstract double? DownloadRate { get; }

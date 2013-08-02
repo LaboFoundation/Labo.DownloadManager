@@ -62,9 +62,7 @@ namespace Labo.DownloadManager
 
             DownloadSegmentPositions[] segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);
 
-            //using (
-            Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo);
-                //)
+            using (Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo))
             {
                 SegmentWriter segmentWriter = new SegmentWriter(stream);
                 IList<ISegmentDownloadTask> segmentDownloadTasks = new List<ISegmentDownloadTask>(segmentPositionInfos.Length);

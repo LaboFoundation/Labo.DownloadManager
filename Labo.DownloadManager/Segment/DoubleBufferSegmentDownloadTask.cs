@@ -145,8 +145,11 @@ namespace Labo.DownloadManager.Segment
                 }
                 lock (m_SegmentWriter)
                 {
-                    m_SegmentWriter.Write(segmentDownloadInfo.CurrentPosition, segmentDownloadInfo.Buffer, segmentDownloadInfo.Size);
-                    EnqueueDownloadSegment(new byte[m_BufferSize]);
+                    if (segmentDownloadInfo.CurrentPosition != -1)
+                    {
+                        m_SegmentWriter.Write(segmentDownloadInfo.CurrentPosition, segmentDownloadInfo.Buffer, segmentDownloadInfo.Size);
+                        EnqueueDownloadSegment(new byte[m_BufferSize]);
+                    }
                 }
             }
         }

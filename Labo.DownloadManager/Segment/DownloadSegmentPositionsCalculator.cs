@@ -6,12 +6,17 @@ namespace Labo.DownloadManager.Segment
     {
         public DownloadSegmentPositions[] Calculate(int minimumSegmentSize, int maximumSegmentCount, int segmentCount, long fileSize)
         {
-            segmentCount = Math.Min(maximumSegmentCount, segmentCount == 0 ? 1 : segmentCount);
+            if (fileSize <= 0)
+            {
+                return new[] { new DownloadSegmentPositions(-1, -1) };
+            }
 
             if (fileSize <= minimumSegmentSize)
             {
                 return new[] { new DownloadSegmentPositions(0, fileSize - 1) };
             }
+
+            segmentCount = Math.Min(maximumSegmentCount, segmentCount == 0 ? 1 : segmentCount);
 
             long segmentSize = fileSize/segmentCount;
             while (segmentCount > 1 && segmentSize < minimumSegmentSize)

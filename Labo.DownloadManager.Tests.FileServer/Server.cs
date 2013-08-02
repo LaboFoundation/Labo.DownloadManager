@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -17,7 +18,6 @@ namespace Labo.DownloadManager.Tests.FileServer
         private sealed class ContentHandler : HttpMessageHandler
         {
             private readonly Logger m_Logger;
-            //private readonly Random m_Random = new Random();
             private readonly byte[] m_Data;
 
             public ContentHandler(Logger logger)
