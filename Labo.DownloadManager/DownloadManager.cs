@@ -1,4 +1,5 @@
-﻿using Labo.DownloadManager.EventAggregator;
+﻿using System;
+using Labo.DownloadManager.EventAggregator;
 using Labo.DownloadManager.Protocol;
 using Labo.DownloadManager.Settings;
 using Labo.DownloadManager.Streaming;
@@ -16,6 +17,8 @@ namespace Labo.DownloadManager
 
         public DownloadManager(IDownloadSettings downloadSettings, IDownloadStreamManager downloadStreamManager, INetworkProtocolProviderFactory networkProtocolProviderFactory, IEventManager eventManager)
         {
+            if (downloadSettings == null) throw new ArgumentNullException("downloadSettings");
+
             m_DownloadTaskList = new DownloadTaskList();
             m_DownloadTaskQueue = new DownloadTaskQueue(downloadSettings.MaximumConcurrentDownloads);
             m_DownloadSettings = downloadSettings;
@@ -36,6 +39,8 @@ namespace Labo.DownloadManager
 
         public void AddNewDownloadTask(DownloadTaskInfo downloadTaskInfo)
         {
+            if (downloadTaskInfo == null) throw new ArgumentNullException("downloadTaskInfo");
+
             AddNewDownloadTask(new DownloadTask(m_NetworkProtocolProviderFactory,
                                                 DownloadManagerRuntime.DownloadSegmentPositionsCalculator,
                                                 m_LocalFileDownloadStreamManager,

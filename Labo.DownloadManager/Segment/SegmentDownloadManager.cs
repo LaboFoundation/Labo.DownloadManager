@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Labo.DownloadManager.Segment
@@ -11,6 +12,8 @@ namespace Labo.DownloadManager.Segment
 
         public SegmentDownloadManager(ICollection<ISegmentDownloadTask> downloaders)
         {
+            if (downloaders == null) throw new ArgumentNullException("downloaders");
+
             m_Downloaders = new Queue<ISegmentDownloadTask>(downloaders);
             m_Workers = new Thread[downloaders.Count];
 

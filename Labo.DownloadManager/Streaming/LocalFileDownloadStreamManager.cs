@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace Labo.DownloadManager.Streaming
@@ -13,6 +14,8 @@ namespace Labo.DownloadManager.Streaming
 
         public Stream CreateStream(RemoteFileInfo remoteFileInfo)
         {
+            if (remoteFileInfo == null) throw new ArgumentNullException("remoteFileInfo");
+
             LocalFileInfo localFileInfo = m_LocalFileAllocator.AllocateFile(remoteFileInfo.FileName, remoteFileInfo.FileSize);
             return new FileStream(localFileInfo.FileName, FileMode.Open, FileAccess.Write);
         }

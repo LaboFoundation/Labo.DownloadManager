@@ -23,6 +23,8 @@ namespace Labo.DownloadManager.Protocol
 
         public WebRequest GetWebRequest(DownloadFileInfo file)
         {
+            if (file == null) throw new ArgumentNullException("file");
+
             WebRequest webRequest = m_WebRequestFactory.CreateRequest(new Uri(file.Url));
             webRequest.Timeout = 30000;
 

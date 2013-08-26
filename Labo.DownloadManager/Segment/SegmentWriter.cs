@@ -12,7 +12,7 @@ namespace Labo.DownloadManager.Segment
 
         public void Write(long startPosition, byte[] buffer, int count)
         {
-            lock (m_Stream)
+            lock (this)
             {
                 m_Stream.Position = startPosition;
                 m_Stream.Write(buffer, 0, count);

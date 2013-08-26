@@ -17,6 +17,8 @@ namespace Labo.DownloadManager.Segment
 
         public SegmentDownloader(Stream stream, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
         {
+            if (downloadSegmentInfo == null) throw new ArgumentNullException("downloadSegmentInfo");
+
             m_Stream = stream;
             m_SegmentDownloadRateCalculator = segmentDownloadRateCalculator;
             m_StartPosition = downloadSegmentInfo.StartPosition;
@@ -77,6 +79,8 @@ namespace Labo.DownloadManager.Segment
 
         public override int Download(byte[] buffer)
         {
+            if (buffer == null) throw new ArgumentNullException("buffer");
+
             if (EndPosition == -1)
             {
                 return 0;
