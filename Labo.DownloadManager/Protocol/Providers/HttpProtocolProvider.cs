@@ -18,6 +18,15 @@ namespace Labo.DownloadManager.Protocol.Providers
             m_WebRequestManager = webRequestManager;
         }
 
+        private long GetContentLength(DownloadFileInfo file)
+        {
+            HttpWebRequest request = (HttpWebRequest)m_WebRequestManager.GetWebRequest(file);
+            request.Method = "HEAD";
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            return response.ContentLength;
+        }
+
         public RemoteFileInfo GetRemoteFileInfo(DownloadFileInfo file)
         {
             RemoteFileInfo remoteFileInfo = new RemoteFileInfo();
@@ -26,7 +35,7 @@ namespace Labo.DownloadManager.Protocol.Providers
             HttpWebResponse httpWebResponse = (HttpWebResponse) webRequest.GetResponse();
             remoteFileInfo.LastModified = httpWebResponse.LastModified;
             remoteFileInfo.MimeType = httpWebResponse.ContentType;
-            remoteFileInfo.FileSize = httpWebResponse.ContentLength;
+            remoteFileInfo.FileSize = GetContentLength(file);
             remoteFileInfo.AcceptRanges = string.Compare(httpWebResponse.Headers["Accept-Ranges"], "bytes", StringComparison.OrdinalIgnoreCase) == 0;
 
             return remoteFileInfo;

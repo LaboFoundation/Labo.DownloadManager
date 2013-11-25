@@ -28,15 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMain = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.tsbNewDownload = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.downloadTaskList1 = new Labo.DownloadManager.Win.UI.DownloadTaskList();
+            this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
+            this.downloadTaskList = new Labo.DownloadManager.Win.UI.DownloadTaskList();
             this.menuStripMain.SuspendLayout();
             this.toolStripMain.SuspendLayout();
             this.SuspendLayout();
@@ -59,10 +61,16 @@
             this.menuStripMain.TabIndex = 1;
             this.menuStripMain.Text = "menuStrip1";
             // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
             // toolStripMain
             // 
             this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
+            this.tsbNewDownload,
             this.toolStripSplitButton1});
             this.toolStripMain.Location = new System.Drawing.Point(0, 24);
             this.toolStripMain.Name = "toolStripMain";
@@ -70,14 +78,15 @@
             this.toolStripMain.TabIndex = 2;
             this.toolStripMain.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // tsbNewDownload
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(92, 22);
-            this.toolStripButton1.Text = "New Download";
+            this.tsbNewDownload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbNewDownload.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewDownload.Image")));
+            this.tsbNewDownload.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbNewDownload.Name = "tsbNewDownload";
+            this.tsbNewDownload.Size = new System.Drawing.Size(92, 22);
+            this.tsbNewDownload.Text = "New Download";
+            this.tsbNewDownload.Click += new System.EventHandler(this.tsbNewDownload_Click);
             // 
             // toolStripSplitButton1
             // 
@@ -96,26 +105,26 @@
             this.downloadToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.downloadToolStripMenuItem.Text = "Download";
             // 
-            // fileToolStripMenuItem
+            // tmrRefresh
             // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "&File";
+            this.tmrRefresh.Enabled = true;
+            this.tmrRefresh.Interval = 1000;
+            this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
             // 
-            // downloadTaskList1
+            // downloadTaskList
             // 
-            this.downloadTaskList1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.downloadTaskList1.Location = new System.Drawing.Point(0, 49);
-            this.downloadTaskList1.Name = "downloadTaskList1";
-            this.downloadTaskList1.Size = new System.Drawing.Size(702, 296);
-            this.downloadTaskList1.TabIndex = 3;
+            this.downloadTaskList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.downloadTaskList.Location = new System.Drawing.Point(0, 49);
+            this.downloadTaskList.Name = "downloadTaskList";
+            this.downloadTaskList.Size = new System.Drawing.Size(702, 296);
+            this.downloadTaskList.TabIndex = 3;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(702, 367);
-            this.Controls.Add(this.downloadTaskList1);
+            this.Controls.Add(this.downloadTaskList);
             this.Controls.Add(this.toolStripMain);
             this.Controls.Add(this.statusStripMain);
             this.Controls.Add(this.menuStripMain);
@@ -136,11 +145,12 @@
         private System.Windows.Forms.StatusStrip statusStripMain;
         private System.Windows.Forms.MenuStrip menuStripMain;
         private System.Windows.Forms.ToolStrip toolStripMain;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton tsbNewDownload;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.ToolStripMenuItem downloadToolStripMenuItem;
-        private DownloadTaskList downloadTaskList1;
+        private DownloadTaskList downloadTaskList;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.Timer tmrRefresh;
     }
 }
 

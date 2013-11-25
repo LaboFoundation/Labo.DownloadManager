@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-
-namespace Labo.DownloadManager.Segment
+﻿namespace Labo.DownloadManager.Segment
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+
     internal sealed class DoubleBufferSegmentDownloadTask : ISegmentDownloadTask
     {
         private sealed class SegmentDownloadInfo
@@ -34,6 +35,14 @@ namespace Labo.DownloadManager.Segment
             m_Threads = new Thread[2];
         }
 
+        public ISegmentDownloaderInfo SegmentDownloaderInfo
+        {
+            get
+            {
+                return m_SegmentDownloader;
+            }
+        }
+
         public void Download()
         {
             EnqueueDownloadSegment(new byte[m_BufferSize]);
@@ -63,47 +72,58 @@ namespace Labo.DownloadManager.Segment
 
                 m_Threads[i] = null;
             }
-
         }
 
         private void DownloadSegment()
         {
             while (true)
             {
-                byte[] buffer;
-                lock (m_SegmentDownloaderLocker)
+                try
                 {
-                    while (m_InputBufferQueue.Count == 0)
+                    byte[] buffer;
+                    lock (m_SegmentDownloaderLocker)
                     {
-                        Monitor.Wait(m_SegmentDownloaderLocker);
+                        while (m_InputBufferQueue.Count == 0)
+                        {
+                            Monitor.Wait(m_SegmentDownloaderLocker);
+                        }
+
+                        buffer = m_InputBufferQueue.Dequeue();
                     }
-                    buffer = m_InputBufferQueue.Dequeue();
-                }
-                if (buffer == null)
-                {
-                    return;
-                }
 
-                lock (m_SegmentDownloader)
-                {
-                    int size = m_SegmentDownloader.Download(buffer);
-
-                    long currentPosition = m_SegmentDownloader.CurrentPosition;
-
-                    m_SegmentDownloader.IncreaseCurrentPosition(size);
-
-                    EnqueueWriteSegment(new SegmentDownloadInfo
+                    if (buffer == null)
                     {
-                        Buffer = buffer,
-                        CurrentPosition = currentPosition,
-                        Size = size
-                    });
-
-                    if (m_SegmentDownloader.IsDownloadFinished)
-                    {
-                        EnqueueWriteSegment(null);
                         return;
                     }
+
+                    lock (m_SegmentDownloader)
+                    {
+                        int size = m_SegmentDownloader.Download(buffer);
+
+                        long currentPosition = m_SegmentDownloader.CurrentPosition;
+
+                        m_SegmentDownloader.IncreaseCurrentPosition(size);
+
+                        EnqueueWriteSegment(new SegmentDownloadInfo
+                        {
+                            Buffer = buffer,
+                            CurrentPosition = currentPosition,
+                            Size = size
+                        });
+
+                        if (m_SegmentDownloader.IsDownloadFinished)
+                        {
+                            EnqueueWriteSegment(null);
+                            return;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    m_SegmentDownloader.SetError(ex);
+
+                    EnqueueWriteSegment(null);
+                    return;
                 }
             }
         }
@@ -137,12 +157,15 @@ namespace Labo.DownloadManager.Segment
                     {
                         Monitor.Wait(m_SegmentWriterLocker);
                     }
+
                     segmentDownloadInfo = m_OutputBufferQueue.Dequeue();
                 }
+
                 if (segmentDownloadInfo == null)
                 {
                     return;
                 }
+
                 lock (m_SegmentWriter)
                 {
                     if (segmentDownloadInfo.CurrentPosition != -1)

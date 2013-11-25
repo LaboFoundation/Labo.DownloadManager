@@ -42,5 +42,30 @@ namespace Labo.DownloadManager.Tests
         {
             m_SegmentDownloader = segmentDownloader;
         }
+
+        public override void SetError(System.Exception exception)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override SegmentState State
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        public override System.Exception LastException
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        public override System.DateTime? LastExceptionTime
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        public override string Url
+        {
+            get { throw new System.NotImplementedException(); }
+        }
     }
 }

@@ -15,9 +15,16 @@ namespace Labo.DownloadManager.Segment
         private long m_CurrentPosition;
         private readonly long m_EndPosition;
 
+        private SegmentState m_SegmentState;
+        private Exception m_LastException;
+        private DateTime? m_LastExceptionTime;
+
         public SegmentDownloader(Stream stream, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
         {
-            if (downloadSegmentInfo == null) throw new ArgumentNullException("downloadSegmentInfo");
+            if (downloadSegmentInfo == null)
+            {
+                throw new ArgumentNullException("downloadSegmentInfo");
+            }
 
             m_Stream = stream;
             m_SegmentDownloadRateCalculator = segmentDownloadRateCalculator;
@@ -73,6 +80,7 @@ namespace Labo.DownloadManager.Segment
                         }
                     }
                 }
+
                 return m_Stream;
             }
         }
@@ -117,6 +125,33 @@ namespace Labo.DownloadManager.Segment
             {
                 m_CurrentPosition += size;
             }
+        }
+
+        public override SegmentState State
+        {
+            get { return m_SegmentState; }
+        }
+
+        public override Exception LastException
+        {
+            get { return m_LastException; }
+        }
+
+        public override DateTime? LastExceptionTime
+        {
+            get { return m_LastExceptionTime; }
+        }
+
+        public override string Url
+        {
+            get { return m_File == null ? string.Empty : m_File.Url; }
+        }
+
+        public override void SetError(Exception exception)
+        {
+            m_LastException = exception;
+            m_LastExceptionTime = DateTime.Now;
+            m_SegmentState = SegmentState.Error;
         }
     }
 }

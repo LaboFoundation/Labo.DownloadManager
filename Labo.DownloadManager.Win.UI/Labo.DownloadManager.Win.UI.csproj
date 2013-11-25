@@ -50,11 +50,21 @@
     <Compile Include="DownloadTaskList.Designer.cs">
       <DependentUpon>DownloadTaskList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\ByteFormatter.cs" />
+    <Compile Include="Helper\FileTypeImageList.cs" />
+    <Compile Include="Helper\IconReader.cs" />
+    <Compile Include="Helper\TimeSpanFormatter.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewDownloadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewDownloadForm.Designer.cs">
+      <DependentUpon>NewDownloadForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +73,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewDownloadForm.resx">
+      <DependentUpon>NewDownloadForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

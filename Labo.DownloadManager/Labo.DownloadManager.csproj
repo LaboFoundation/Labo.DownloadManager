@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="DownloadHelper.cs" />
     <Compile Include="DownloadTaskInfo.cs" />
+    <Compile Include="DownloadTaskStatistics.cs" />
     <Compile Include="Segment\DoubleBufferSegmentDownloadTask.cs" />
     <Compile Include="DownloadManager.cs" />
     <Compile Include="DownloadManagerRuntime.cs" />
@@ -65,6 +66,10 @@
     <Compile Include="EventArgs\DownloadTaskStateChangedEventMessage.cs" />
     <Compile Include="EventArgs\DownloadTaskFinishedEventMessage.cs" />
     <Compile Include="Segment\IDownloadSegmentPositionsCalculator.cs" />
+    <Compile Include="Segment\ISegmentDownloaderInfo.cs" />
+    <Compile Include="Segment\SegmentDownloaderInfoCollection.cs" />
+    <Compile Include="Segment\SegmentDownloadTaskCollection.cs" />
+    <Compile Include="Segment\SegmentState.cs" />
     <Compile Include="Streaming\IDownloadStreamManager.cs" />
     <Compile Include="IDownloadTask.cs" />
     <Compile Include="IDownloadTaskList.cs" />

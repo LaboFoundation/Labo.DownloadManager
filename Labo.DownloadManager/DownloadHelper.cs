@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Text;
+
 using Labo.DownloadManager.EventAggregator;
 using Labo.DownloadManager.EventArgs;
 using Labo.DownloadManager.Protocol;
@@ -10,7 +9,9 @@ using Labo.DownloadManager.Streaming;
 
 namespace Labo.DownloadManager
 {
-    public class DownloadHelper
+    using System.Collections.Generic;
+
+    public sealed class DownloadHelper
     {
         private readonly DownloadManager m_DownloadManager;
         private readonly EventManager m_EventManager;
@@ -23,7 +24,7 @@ namespace Labo.DownloadManager
             networkProtocolProviderFactory.RegisterProvider("https", httpProtocolProvider);
             m_EventManager = new EventManager();
             m_DownloadManager = new DownloadManager(
-                new InMemoryDownloadSettings(200, 5, 8096, 5),
+                new InMemoryDownloadSettings(200, 5, 8096, 5, 5),
                 new MemoryDownloadStreamManager(),
                 networkProtocolProviderFactory,
                 m_EventManager);
@@ -39,24 +40,29 @@ namespace Labo.DownloadManager
             m_DownloadManager.Shutdown(waitAllDownloads);
         }
 
-        public void AddNewDownloadTask(DownloadTaskInfo downloadTaskInfo)
+        public Guid AddNewDownloadTask(DownloadTaskInfo downloadTaskInfo)
         {
-            m_DownloadManager.AddNewDownloadTask(downloadTaskInfo);
+            return m_DownloadManager.AddNewDownloadTask(downloadTaskInfo);
         }
 
         public void AddNewDownloadTask(string url, string fileName)
         {
-            m_DownloadManager.AddNewDownloadTask(new DownloadTaskInfo(new DownloadFileInfo
-                {
-                    Url = url,
-                    SegmentCount = 5,
-                    FileName = fileName
-                }, true));
+            m_DownloadManager.AddNewDownloadTask(new DownloadTaskInfo(new DownloadFileInfo(url, fileName, 5), true));
         }
 
         public void OnDownloadFinished(Action<DownloadTaskFinishedEventMessage> action)
         {
             m_EventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventMessage>(action));
+        }
+
+        public IList<DownloadTaskStatistics> GetDownloadTaskStatistics()
+        {
+            return m_DownloadManager.GetDownloadTaskStatistics();
+        }
+
+        public DownloadTaskStatistics GetDownloadTaskStatistics(Guid guid)
+        {
+            return m_DownloadManager.GetDownloadTaskStatistics(guid);            
         }
     }
 }

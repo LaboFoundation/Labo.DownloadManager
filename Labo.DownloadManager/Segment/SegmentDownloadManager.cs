@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-
-namespace Labo.DownloadManager.Segment
+﻿namespace Labo.DownloadManager.Segment
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+
     public sealed class SegmentDownloadManager
     {
         private readonly Queue<ISegmentDownloadTask> m_Downloaders;
         private readonly object m_Locker = new object();
         private readonly Thread[] m_Workers;
 
-        public SegmentDownloadManager(ICollection<ISegmentDownloadTask> downloaders)
+        public SegmentDownloadManager(SegmentDownloadTaskCollection downloaders)
         {
-            if (downloaders == null) throw new ArgumentNullException("downloaders");
+            if (downloaders == null)
+            {
+                throw new ArgumentNullException("downloaders");
+            }
 
             m_Downloaders = new Queue<ISegmentDownloadTask>(downloaders);
             m_Workers = new Thread[downloaders.Count];
@@ -75,12 +78,15 @@ namespace Labo.DownloadManager.Segment
                     {
                         Monitor.Wait(m_Locker);
                     }
+
                     downloader = m_Downloaders.Dequeue();
                 }
+
                 if (downloader == null)
                 {
                     return;
                 }
+
                 downloader.Download();
             }
         }

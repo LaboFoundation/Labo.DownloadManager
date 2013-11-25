@@ -9,5 +9,7 @@
         int DownloadBufferSize { get; }
 
         int MaximumConcurrentDownloads { get; }
+
+        int MaximumRetries { get; }
     }
 }

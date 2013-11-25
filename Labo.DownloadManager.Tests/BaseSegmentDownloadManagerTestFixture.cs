@@ -45,13 +45,13 @@ namespace Labo.DownloadManager.Tests
             for (int i = 0; i < segmentPositionInfos.Length; i++)
             {
                 DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];
-                byte[] dataPart = data.Skip((int) segmentPosition.StartPosition).Take((int) (segmentPosition.EndPosition - segmentPosition.StartPosition + 1)).ToArray();
+                byte[] dataPart = data.Skip((int) segmentPosition.StartPosition).Take((int)(segmentPosition.EndPosition - segmentPosition.StartPosition + 1)).ToArray();
                 DownloadStream downloadStream = new DownloadStream(dataPart);
                 segmentDownloadTasks.Add(CreateSegmentDownloadTask(bufferSize, CreateSegmentDownloader(downloadStream, segmentPosition), CreateSegmentWriter(outputStream)));
                 downloadStreams.Add(downloadStream);
             }
 
-            SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(segmentDownloadTasks);
+            SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(new SegmentDownloadTaskCollection(segmentDownloadTasks));
             segmentDownloadManager.Start();
             segmentDownloadManager.Finish(true);
 

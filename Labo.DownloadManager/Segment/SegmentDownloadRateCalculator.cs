@@ -22,15 +22,16 @@ namespace Labo.DownloadManager.Segment
                 return null;
             }
 
+            double seconds = now.Subtract(m_LastCalculation.Value).TotalSeconds;
+
             m_LastCalculation = now;
 
-            double seconds = now.Subtract(m_LastCalculation.Value).TotalSeconds;
             if (Math.Abs(seconds - 0) < 0.00001)
             {
                 return null;
             }
 
-            double rate = (currentPosition - m_LastPosition)/seconds;
+            double rate = (currentPosition - m_LastPosition) / seconds;
 
             m_LastPosition = currentPosition;
 

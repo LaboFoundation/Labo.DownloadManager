@@ -25,15 +25,13 @@ namespace Labo.DownloadManager.Tests
             networkProtocolProviderFactory.RegisterProvider("http", httpProtocolProvider);
             networkProtocolProviderFactory.RegisterProvider("https", httpProtocolProvider);
 
-            DownloadTask downloadTask = new DownloadTask(networkProtocolProviderFactory,
-                                                          new DownloadSegmentPositionsCalculator(),
-                                                          new MemoryDownloadStreamManager(),
-                                                          new InMemoryDownloadSettings(200, 5, 8096, 5),
-                                                          new DownloadFileInfo
-                                                              {
-                                                                  Url = "https://androidnetworktester.googlecode.com/files/1mb.txt",
-                                                                  SegmentCount = 5
-                                                              }, new EventManager());
+            DownloadTask downloadTask = new DownloadTask(
+                networkProtocolProviderFactory,
+                new DownloadSegmentPositionsCalculator(),
+                new MemoryDownloadStreamManager(),
+                new InMemoryDownloadSettings(200, 5, 8096, 5, 5),
+                new DownloadFileInfo("https://androidnetworktester.googlecode.com/files/1mb.txt", "1mb.txt", 5),
+                new EventManager());
 
             downloadTask.EventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventMessage>(x =>
                 {

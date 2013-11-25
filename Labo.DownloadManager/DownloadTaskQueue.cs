@@ -80,12 +80,15 @@ namespace Labo.DownloadManager
                     {
                         Monitor.Wait(m_Locker);
                     }
+
                     downloadTask = m_DownloadTasks.Dequeue();
                 }
+
                 if (downloadTask == null)
                 {
                     return;
                 }
+
                 downloadTask.StartDownload();
             }
         }

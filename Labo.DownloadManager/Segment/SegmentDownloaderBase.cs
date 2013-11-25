@@ -10,7 +10,7 @@ namespace Labo.DownloadManager.Segment
         {
             get
             {
-                return (EndPosition <= 0 ? 0 : EndPosition - CurrentPosition);
+                return EndPosition <= 0 ? 0 : EndPosition - CurrentPosition;
             }
         }
 
@@ -30,10 +30,12 @@ namespace Labo.DownloadManager.Segment
                 {
                     return null;
                 }
+
                 if (dowloadRate.Value > 0.0)
                 {
                     return TimeSpan.FromSeconds(RemainingTransfer / dowloadRate.Value);
                 }
+
                 return TimeSpan.MaxValue;
             }
         }
@@ -47,7 +49,7 @@ namespace Labo.DownloadManager.Segment
         {
             get
             {
-                return (EndPosition <= 0 ? 0 : (TransferedDownload / (double)RemainingTransfer * 100.0));
+                return EndPosition <= 0 ? 0 : (TransferedDownload / (double)RemainingTransfer * 100.0);
             }
         }
 
@@ -58,5 +60,15 @@ namespace Labo.DownloadManager.Segment
         public abstract int Download(byte[] buffer);
 
         public abstract void IncreaseCurrentPosition(int size);
+
+        public abstract void SetError(Exception exception);
+
+        public abstract SegmentState State { get; }
+
+        public abstract Exception LastException { get; }
+
+        public abstract DateTime? LastExceptionTime { get; }
+
+        public abstract string Url { get; }
     }
 }

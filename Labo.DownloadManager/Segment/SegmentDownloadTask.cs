@@ -6,6 +6,11 @@
         private readonly ISegmentWriter m_SegmentWriter;
         private readonly int m_BufferSize;
 
+        public ISegmentDownloaderInfo SegmentDownloaderInfo
+        {
+            get { return m_SegmentDownloader; }
+        }
+
         public SegmentDownloadTask(int bufferSize, ISegmentDownloader segmentDownloader, ISegmentWriter segmentWriter)
         {
             m_BufferSize = bufferSize;

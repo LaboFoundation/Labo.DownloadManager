@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
-namespace Labo.DownloadManager.Win.UI
+﻿namespace Labo.DownloadManager.Win.UI
 {
+    using System.Windows.Forms;
+
     public partial class MainForm : Form
     {
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        private void tsbNewDownload_Click(object sender, System.EventArgs e)
+        {
+            using (NewDownloadForm newDownloadForm = new NewDownloadForm())
+            {
+                DialogResult dialogResult = newDownloadForm.ShowDialog(this);
+                if (dialogResult == DialogResult.OK)
+                {
+                    downloadTaskList.AddNewDownloadTask(newDownloadForm.DownloadTaskInfo);
+                }
+            }
+        }
+
+        private void tmrRefresh_Tick(object sender, System.EventArgs e)
+        {
+            downloadTaskList.UpdateList();
         }
     }
 }
