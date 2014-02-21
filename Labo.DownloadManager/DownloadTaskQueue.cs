@@ -56,14 +56,20 @@ namespace Labo.DownloadManager
                 for (int i = 0; i < m_Workers.Length; i++)
                 {
                     Thread worker = m_Workers[i];
-                    worker.Join();
+                    if (worker != null)
+                    {
+                        worker.Join();                        
+                    }
                 }
             }
 
             for (int i = 0; i < m_Workers.Length; i++)
             {
                 Thread worker = m_Workers[i];
-                worker.Abort();
+                if (worker != null)
+                {
+                    worker.Abort();                    
+                }
 
                 m_Workers[i] = null;
             }

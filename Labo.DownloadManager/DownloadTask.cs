@@ -1,5 +1,6 @@
 ﻿namespace Labo.DownloadManager
 {
+    using System;
     using System.IO;
 
     using Labo.DownloadManager.EventAggregator;
@@ -17,6 +18,7 @@
         private readonly DownloadFileInfo m_File;
         private readonly IDownloadStreamManager m_DownloadStreamManager;
         private readonly IDownloadSettings m_Settings;
+        private int m_RetryCount = 1;
 
         private SegmentDownloadTaskCollection m_SegmentDownloadTasks;
 
@@ -70,35 +72,51 @@
 
         public void StartDownload()
         {
-            ChangeState(DownloadTaskState.Preparing);
-
-            INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Url);
-
-            RemoteFileInfo remoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(m_File);
-            remoteFileInfo.FileName = m_File.FileName;
-
-            DownloadSegmentPositions[] segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);
-
-            using (Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo))
+            try
             {
-                SegmentWriter segmentWriter = new SegmentWriter(stream);
-                SegmentDownloadTasks = new SegmentDownloadTaskCollection(segmentPositionInfos.Length);
-                for (int i = 0; i < segmentPositionInfos.Length; i++)
+                ChangeState(DownloadTaskState.Preparing);
+
+                INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Url);
+
+                RemoteFileInfo remoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(m_File);
+                remoteFileInfo.FileName = m_File.FileName;
+
+                DownloadSegmentPositions[] segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);
+
+                using (Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo))
                 {
-                    DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];
-                    SegmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(m_Settings.DownloadBufferSize, new SegmentDownloader(m_File, networkProtocolProvider, segmentPosition, new SegmentDownloadRateCalculator(segmentPosition.StartPosition)), segmentWriter));
+                    SegmentWriter segmentWriter = new SegmentWriter(stream);
+                    SegmentDownloadTasks = new SegmentDownloadTaskCollection(segmentPositionInfos.Length);
+                    for (int i = 0; i < segmentPositionInfos.Length; i++)
+                    {
+                        DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];
+                        SegmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(m_Settings.DownloadBufferSize, new SegmentDownloader(m_File, networkProtocolProvider, segmentPosition, new SegmentDownloadRateCalculator(segmentPosition.StartPosition)), segmentWriter));
+                    }
+
+                    SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(SegmentDownloadTasks);
+                    segmentDownloadManager.Start();
+
+                    ChangeState(DownloadTaskState.Working);
+
+                    segmentDownloadManager.Finish(true);
+
+                    ChangeState(DownloadTaskState.Ended);
+
+                    m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventMessage(this, stream, remoteFileInfo));
                 }
-
-                SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(SegmentDownloadTasks);
-                segmentDownloadManager.Start();
-
-                ChangeState(DownloadTaskState.Working);
-
-                segmentDownloadManager.Finish(true);
-
-                ChangeState(DownloadTaskState.Ended);
-
-                m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventMessage(this, stream, remoteFileInfo));
+            }
+            catch (Exception)
+            {
+                if (m_RetryCount < m_Settings.MaximumRetries)
+                {
+                    m_RetryCount++;
+                    
+                    StartDownload();
+                }
+                else
+                {
+                    ChangeState(DownloadTaskState.EndedWithError);
+                }
             }
         }
 
