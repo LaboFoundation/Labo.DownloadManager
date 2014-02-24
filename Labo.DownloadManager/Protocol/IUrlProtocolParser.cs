@@ -1,7 +1,9 @@
 namespace Labo.DownloadManager.Protocol
 {
+    using System;
+
     public interface IUrlProtocolParser
     {
-        string Parse(string url);
+        string Parse(Uri uri);
     }
 }

@@ -14,6 +14,8 @@ using NUnit.Framework;
 
 namespace Labo.DownloadManager.Tests
 {
+    using System;
+
     [TestFixture]
     public class DownloadTaskTestFixture
     {
@@ -30,7 +32,7 @@ namespace Labo.DownloadManager.Tests
                 new DownloadSegmentPositionsCalculator(),
                 new MemoryDownloadStreamManager(),
                 new InMemoryDownloadSettings(200, 5, 8096, 5, 5),
-                new DownloadFileInfo("https://androidnetworktester.googlecode.com/files/1mb.txt", "1mb.txt", 5),
+                new DownloadFileInfo(new Uri("https://androidnetworktester.googlecode.com/files/1mb.txt"), "1mb.txt", 5),
                 new EventManager());
 
             downloadTask.EventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventMessage>(x =>

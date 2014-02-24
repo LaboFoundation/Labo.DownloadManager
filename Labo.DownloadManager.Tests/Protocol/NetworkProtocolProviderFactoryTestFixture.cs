@@ -5,6 +5,8 @@ using NUnit.Framework;
 
 namespace Labo.DownloadManager.Tests.Protocol
 {
+    using System;
+
     [TestFixture]
     public class NetworkProtocolProviderFactoryTestFixture
     {
@@ -15,14 +17,14 @@ namespace Labo.DownloadManager.Tests.Protocol
         public void CreateProvider(string url, string protocol, string registerProtocol)
         {
             Mock<IUrlProtocolParser> urlProtocolParserMock = new Mock<IUrlProtocolParser>();
-            urlProtocolParserMock.Setup(x => x.Parse(url)).Returns(protocol);
+            urlProtocolParserMock.Setup(x => x.Parse(new Uri(url))).Returns(protocol);
 
             NetworkProtocolProviderFactory networkProtocolProviderFactory = new NetworkProtocolProviderFactory(urlProtocolParserMock.Object);
             
             INetworkProtocolProvider networkProtocolProvider = new Mock<INetworkProtocolProvider>().Object;
             networkProtocolProviderFactory.RegisterProvider(registerProtocol, networkProtocolProvider);
 
-            Assert.AreEqual(networkProtocolProvider, networkProtocolProviderFactory.CreateProvider(url));
+            Assert.AreEqual(networkProtocolProvider, networkProtocolProviderFactory.CreateProvider(new Uri(url)));
         }
     }
 }

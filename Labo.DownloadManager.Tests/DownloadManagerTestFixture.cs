@@ -10,6 +10,8 @@ using NUnit.Framework;
 
 namespace Labo.DownloadManager.Tests
 {
+    using System;
+
     [TestFixture]
     public class DownloadManagerTestFixture
     {
@@ -29,8 +31,8 @@ namespace Labo.DownloadManager.Tests
                 eventManager);
             downloadManager.Start();
 
-            downloadManager.AddNewDownloadTask(new DownloadTaskInfo(new DownloadFileInfo("https://androidnetworktester.googlecode.com/files/1mb.txt", "1mb.txt", 5), true));
-            downloadManager.AddNewDownloadTask(new DownloadTaskInfo(new DownloadFileInfo("http://127.0.0.1:8552/1mb.txt", "1mb.txt", 5), true));
+            downloadManager.AddNewDownloadTask(new DownloadTaskInfo(new DownloadFileInfo(new Uri("https://androidnetworktester.googlecode.com/files/1mb.txt"), "1mb.txt", 5), true));
+            downloadManager.AddNewDownloadTask(new DownloadTaskInfo(new DownloadFileInfo(new Uri("http://127.0.0.1:8552/1mb.txt"), "1mb.txt", 5), true));
 
             eventManager.EventSubscriber.RegisterConsumer(new ActionEventConsumer<DownloadTaskFinishedEventMessage>(x =>
                 {

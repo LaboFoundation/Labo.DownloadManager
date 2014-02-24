@@ -76,12 +76,21 @@
             {
                 ChangeState(DownloadTaskState.Preparing);
 
-                INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Url);
+                INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Uri);
 
                 RemoteFileInfo remoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(m_File);
                 remoteFileInfo.FileName = m_File.FileName;
 
-                DownloadSegmentPositions[] segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);
+                DownloadSegmentPositions[] segmentPositionInfos;
+
+                if (remoteFileInfo.AcceptRanges)
+                {
+                    segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);                    
+                }
+                else
+                {
+                    segmentPositionInfos = new[] { new DownloadSegmentPositions(0, remoteFileInfo.FileSize - 1) };
+                }
 
                 using (Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo))
                 {
@@ -124,7 +133,7 @@
         {
             DownloadTaskStatistics downloadTaskStatistics = SegmentDownloadTasks.GetDownloadTaskStatistics();
             downloadTaskStatistics.DownloadTaskState = State;
-            downloadTaskStatistics.FileUrl = m_File.Url;
+            downloadTaskStatistics.FileUri = m_File.Uri;
             return downloadTaskStatistics;
         }
     }

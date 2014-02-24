@@ -3,6 +3,8 @@ using Labo.DownloadManager.Segment;
 
 namespace Labo.DownloadManager.Tests
 {
+    using System;
+
     public sealed class SegmentDownloaderSimulator : SegmentDownloaderBase
     {
         private readonly ISegmentDownloader m_SegmentDownloader;
@@ -63,7 +65,7 @@ namespace Labo.DownloadManager.Tests
             get { throw new System.NotImplementedException(); }
         }
 
-        public override string Url
+        public override Uri Uri
         {
             get { throw new System.NotImplementedException(); }
         }

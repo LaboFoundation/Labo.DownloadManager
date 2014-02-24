@@ -46,7 +46,7 @@
             item.SubItems.Add(string.Format(CultureInfo.CurrentCulture, "{0} {1}", downloadTaskStatistics.CreatedDate.ToShortDateString(), downloadTaskStatistics.CreatedDate.ToShortTimeString()));
             item.SubItems.Add(downloadTaskStatistics.DownloadTaskState.ToString());
             item.SubItems.Add(GetResumeText(downloadTaskStatistics));
-            item.SubItems.Add(downloadTaskStatistics.FileUrl);
+            item.SubItems.Add(downloadTaskStatistics.FileUri.OriginalString);
 
             m_DownloadTaskItemMap[item] = newTaskGuid;
 
@@ -102,7 +102,7 @@
                     }
 
                     item.SubItems[8].Text = GetResumeText(downloadTaskStatistics);
-                    item.SubItems[9].Text = downloadTaskStatistics.FileUrl;
+                    item.SubItems[9].Text = downloadTaskStatistics.FileUri.OriginalString;
                     item.Tag = downloadTaskStatistics.DownloadTaskState;
                 }
             }
@@ -165,7 +165,7 @@
                 listViewItem.SubItems[5].Text = string.Format("{0:0.##}", segmentDownloaderInfo.DownloadRate / 1024.0);
                 listViewItem.SubItems[6].Text = TimeSpanFormatter.ToString(segmentDownloaderInfo.RemainingTime);        
                 listViewItem.SubItems[7].Text = segmentDownloaderInfo.LastException != null ? string.Format(CultureInfo.CurrentCulture, "{0}, {1}", segmentDownloaderInfo.State, segmentDownloaderInfo.LastException.Message) : segmentDownloaderInfo.State.ToString();
-                listViewItem.SubItems[8].Text = segmentDownloaderInfo.Url;
+                listViewItem.SubItems[8].Text = segmentDownloaderInfo.Uri.OriginalString;
             }
         }
 
@@ -188,7 +188,7 @@
                 item.SubItems.Add(string.Format("{0:0.##}", segmentDownloaderInfo.DownloadRate / 1024.0));
                 item.SubItems.Add(TimeSpanFormatter.ToString(segmentDownloaderInfo.RemainingTime));
                 item.SubItems.Add(segmentDownloaderInfo.State.ToString());
-                item.SubItems.Add(segmentDownloaderInfo.Url);
+                item.SubItems.Add(segmentDownloaderInfo.Uri.OriginalString);
 
                 lvwDownloadTaskSegments.Items.Add(item);
             }

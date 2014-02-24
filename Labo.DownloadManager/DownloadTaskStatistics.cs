@@ -8,7 +8,7 @@
     {
         private SegmentDownloaderInfoCollection m_Segments;
 
-        public string FileUrl { get; set; }
+        public Uri FileUri { get; set; }
 
         public long FileSize { get; set; }
 

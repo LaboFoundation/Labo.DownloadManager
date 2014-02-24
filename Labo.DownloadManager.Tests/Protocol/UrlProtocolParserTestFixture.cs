@@ -22,7 +22,7 @@ namespace Labo.DownloadManager.Tests.Protocol
         public void Parse(string url, string expectedProtocol)
         {
             IUrlProtocolParser urlProtocolParser = new UrlProtocolParser();
-            Assert.AreEqual(expectedProtocol, urlProtocolParser.Parse(url));
+            Assert.AreEqual(expectedProtocol, urlProtocolParser.Parse(new Uri(url)));
         }
     }
 }

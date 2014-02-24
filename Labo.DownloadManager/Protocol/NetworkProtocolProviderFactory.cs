@@ -1,10 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using Labo.DownloadManager.Protocol.Exceptions;
-
 namespace Labo.DownloadManager.Protocol
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+
+    using Labo.DownloadManager.Protocol.Exceptions;
+
     internal sealed class NetworkProtocolProviderFactory : INetworkProtocolProviderFactory
     {
         private readonly IUrlProtocolParser m_UrlProtocolParser;
@@ -17,9 +18,9 @@ namespace Labo.DownloadManager.Protocol
             m_NetworkProtocolProviders = new Dictionary<string, INetworkProtocolProvider>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public INetworkProtocolProvider CreateProvider(string url)
+        public INetworkProtocolProvider CreateProvider(Uri uri)
         {
-            string protocol = m_UrlProtocolParser.Parse(url);
+            string protocol = m_UrlProtocolParser.Parse(uri);
             lock (m_NetworkProtocolProviders)
             {
                 INetworkProtocolProvider networkProtocolProvider;

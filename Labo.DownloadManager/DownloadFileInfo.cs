@@ -1,8 +1,10 @@
 ﻿namespace Labo.DownloadManager
 {
+    using System;
+
     public sealed class DownloadFileInfo
     {
-        public string Url { get; set; }
+        public Uri Uri { get; set; }
 
         public bool Authenticate { get; set; }
 
@@ -14,19 +16,19 @@
 
         public int SegmentCount { get; set; }
 
-        public DownloadFileInfo(string url, string fileName, int segmentCount)
-            : this(url, fileName, segmentCount, false, null, null)
+        public DownloadFileInfo(Uri uri, string fileName, int segmentCount)
+            : this(uri, fileName, segmentCount, false, null, null)
         {
         }
 
-        public DownloadFileInfo(string url, string fileName, int segmentCount, string userName, string password)
-            : this(url, fileName, segmentCount, true, userName, password)
+        public DownloadFileInfo(Uri uri, string fileName, int segmentCount, string userName, string password)
+            : this(uri, fileName, segmentCount, true, userName, password)
         {
         }
 
-        public DownloadFileInfo(string url, string fileName, int segmentCount, bool authenticate, string userName, string password)
+        public DownloadFileInfo(Uri uri, string fileName, int segmentCount, bool authenticate, string userName, string password)
         {
-            Url = url;
+            Uri = uri;
             FileName = fileName;
             SegmentCount = segmentCount;
             Authenticate = authenticate;

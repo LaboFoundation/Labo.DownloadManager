@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Threading;
-
 namespace Labo.DownloadManager
 {
+    using System.Collections.Generic;
+    using System.Threading;
+
     public sealed class DownloadTaskQueue : IDownloadTaskQueue
     {
         private readonly Queue<IDownloadTask> m_DownloadTasks;
