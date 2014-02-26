@@ -32,5 +32,11 @@ namespace Labo.DownloadManager.Segment
         /// </summary>
         /// <param name="exception">The exception.</param>
         void SetError(Exception exception);
+
+        /// <summary>
+        /// Sets the download finish date.
+        /// </summary>
+        /// <param name="date">The finish date.</param>
+        void SetDownloadFinishDate(DateTime date);
     }
 }
