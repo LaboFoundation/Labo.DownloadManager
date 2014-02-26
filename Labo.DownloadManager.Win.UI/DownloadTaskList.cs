@@ -43,6 +43,7 @@
             item.SubItems.Add(GetDownloadProgressText(downloadTaskStatistics));
             item.SubItems.Add(TimeSpanFormatter.ToString(downloadTaskStatistics.RemainingTime));
             item.SubItems.Add("0");
+            item.SubItems.Add("0");
             item.SubItems.Add(string.Format(CultureInfo.CurrentCulture, "{0} {1}", downloadTaskStatistics.CreatedDate.ToShortDateString(), downloadTaskStatistics.CreatedDate.ToShortTimeString()));
             item.SubItems.Add(downloadTaskStatistics.DownloadTaskState.ToString());
             item.SubItems.Add(GetResumeText(downloadTaskStatistics));
@@ -91,18 +92,19 @@
                     item.SubItems[3].Text = GetDownloadProgressText(downloadTaskStatistics);
                     item.SubItems[4].Text = TimeSpanFormatter.ToString(downloadTaskStatistics.RemainingTime);
                     item.SubItems[5].Text = GetDownloadRateText(downloadTaskStatistics);
+                    item.SubItems[6].Text = GetAverageDownloadRateText(downloadTaskStatistics);
 
                     if (!string.IsNullOrWhiteSpace(downloadTaskStatistics.LastError))
                     {
-                        item.SubItems[7].Text = string.Format(CultureInfo.CurrentCulture, "{0}, {1}", downloadTaskStatistics.DownloadTaskState, downloadTaskStatistics.LastError);
+                        item.SubItems[8].Text = string.Format(CultureInfo.CurrentCulture, "{0}, {1}", downloadTaskStatistics.DownloadTaskState, downloadTaskStatistics.LastError);
                     }
                     else
                     {
-                        item.SubItems[7].Text = string.IsNullOrEmpty(downloadTaskStatistics.StatusMessage) ? downloadTaskStatistics.DownloadTaskState.ToString() : string.Format(CultureInfo.CurrentCulture, "{0}, {1}", downloadTaskStatistics.DownloadTaskState, downloadTaskStatistics.StatusMessage);
+                        item.SubItems[8].Text = string.IsNullOrEmpty(downloadTaskStatistics.StatusMessage) ? downloadTaskStatistics.DownloadTaskState.ToString() : string.Format(CultureInfo.CurrentCulture, "{0}, {1}", downloadTaskStatistics.DownloadTaskState, downloadTaskStatistics.StatusMessage);
                     }
 
-                    item.SubItems[8].Text = GetResumeText(downloadTaskStatistics);
-                    item.SubItems[9].Text = downloadTaskStatistics.FileUri.OriginalString;
+                    item.SubItems[9].Text = GetResumeText(downloadTaskStatistics);
+                    item.SubItems[10].Text = downloadTaskStatistics.FileUri.OriginalString;
                     item.Tag = downloadTaskStatistics.DownloadTaskState;
                 }
             }
@@ -197,6 +199,11 @@
         private static string GetDownloadRateText(DownloadTaskStatistics downloadTaskStatistics)
         {
             return string.Format(CultureInfo.CurrentCulture, "{0:0.##}", downloadTaskStatistics.DownloadRate / 1024.0);
+        }
+
+        private static string GetAverageDownloadRateText(DownloadTaskStatistics downloadTaskStatistics)
+        {
+            return string.Format(CultureInfo.CurrentCulture, "{0:0.##}", downloadTaskStatistics.AverageDownloadRate / 1024.0);
         }
 
         private static string GetResumeText(DownloadTaskStatistics downloadTaskStatistics)

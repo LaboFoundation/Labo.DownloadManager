@@ -33,16 +33,15 @@
             this.columnFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCompleted = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnProgress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnRemaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnState = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnResume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnUrl = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnRemaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbDownloadTaskInfo = new System.Windows.Forms.TabControl();
             this.tpDownloadTaskInfo = new System.Windows.Forms.TabPage();
             this.tpDownloadTaskSegments = new System.Windows.Forms.TabPage();
-            this.tpDownloadTaskLogs = new System.Windows.Forms.TabPage();
             this.lvwDownloadTaskSegments = new System.Windows.Forms.ListView();
             this.columnSegmentProgress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnSegmentCompleted = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -53,6 +52,8 @@
             this.columnSegmentRemaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnSegmentState = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnSegmentUrl = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tpDownloadTaskLogs = new System.Windows.Forms.TabPage();
+            this.columnAvgSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbDownloadTaskInfo.SuspendLayout();
             this.tpDownloadTaskSegments.SuspendLayout();
             this.SuspendLayout();
@@ -66,6 +67,7 @@
             this.columnProgress,
             this.columnRemaining,
             this.columnSpeed,
+            this.columnAvgSpeed,
             this.columnDate,
             this.columnState,
             this.columnResume,
@@ -101,6 +103,11 @@
             // 
             this.columnProgress.Text = "Progress";
             // 
+            // columnRemaining
+            // 
+            this.columnRemaining.Text = "Remaining";
+            this.columnRemaining.Width = 90;
+            // 
             // columnSpeed
             // 
             this.columnSpeed.Text = "Speed";
@@ -122,11 +129,6 @@
             // 
             this.columnUrl.Text = "Url";
             this.columnUrl.Width = 150;
-            // 
-            // columnRemaining
-            // 
-            this.columnRemaining.Text = "Remaining";
-            this.columnRemaining.Width = 90;
             // 
             // tbDownloadTaskInfo
             // 
@@ -159,16 +161,6 @@
             this.tpDownloadTaskSegments.TabIndex = 1;
             this.tpDownloadTaskSegments.Text = "Segments";
             this.tpDownloadTaskSegments.UseVisualStyleBackColor = true;
-            // 
-            // tpDownloadTaskLogs
-            // 
-            this.tpDownloadTaskLogs.Location = new System.Drawing.Point(4, 22);
-            this.tpDownloadTaskLogs.Name = "tpDownloadTaskLogs";
-            this.tpDownloadTaskLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tpDownloadTaskLogs.Size = new System.Drawing.Size(689, 102);
-            this.tpDownloadTaskLogs.TabIndex = 2;
-            this.tpDownloadTaskLogs.Text = "Logs";
-            this.tpDownloadTaskLogs.UseVisualStyleBackColor = true;
             // 
             // lvwDownloadTaskSegments
             // 
@@ -231,6 +223,21 @@
             this.columnSegmentUrl.Text = "Url";
             this.columnSegmentUrl.Width = 100;
             // 
+            // tpDownloadTaskLogs
+            // 
+            this.tpDownloadTaskLogs.Location = new System.Drawing.Point(4, 22);
+            this.tpDownloadTaskLogs.Name = "tpDownloadTaskLogs";
+            this.tpDownloadTaskLogs.Padding = new System.Windows.Forms.Padding(3);
+            this.tpDownloadTaskLogs.Size = new System.Drawing.Size(689, 102);
+            this.tpDownloadTaskLogs.TabIndex = 2;
+            this.tpDownloadTaskLogs.Text = "Logs";
+            this.tpDownloadTaskLogs.UseVisualStyleBackColor = true;
+            // 
+            // columnAvgSpeed
+            // 
+            this.columnAvgSpeed.Text = "Avg. Speed";
+            this.columnAvgSpeed.Width = 80;
+            // 
             // DownloadTaskList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -272,5 +279,6 @@
         private System.Windows.Forms.ColumnHeader columnSegmentRemaining;
         private System.Windows.Forms.ColumnHeader columnSegmentState;
         private System.Windows.Forms.ColumnHeader columnSegmentUrl;
+        private System.Windows.Forms.ColumnHeader columnAvgSpeed;
     }
 }
