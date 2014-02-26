@@ -25,6 +25,12 @@
         private readonly object m_SegmentDownloaderLocker = new object();
         private readonly object m_SegmentWriterLocker = new object();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DoubleBufferSegmentDownloadTask"/> class.
+        /// </summary>
+        /// <param name="bufferSize">Size of the buffer.</param>
+        /// <param name="segmentDownloader">The segment downloader.</param>
+        /// <param name="segmentWriter">The segment writer.</param>
         public DoubleBufferSegmentDownloadTask(int bufferSize, ISegmentDownloader segmentDownloader, ISegmentWriter segmentWriter)
         {
             m_BufferSize = bufferSize;
@@ -35,6 +41,12 @@
             m_Threads = new Thread[2];
         }
 
+        /// <summary>
+        /// Gets the segment downloader information.
+        /// </summary>
+        /// <value>
+        /// The segment downloader information.
+        /// </value>
         public ISegmentDownloaderInfo SegmentDownloaderInfo
         {
             get
@@ -43,6 +55,9 @@
             }
         }
 
+        /// <summary>
+        /// Starts the segment download task.
+        /// </summary>
         public void Download()
         {
             EnqueueDownloadSegment(new byte[m_BufferSize]);
@@ -163,6 +178,11 @@
 
                 if (segmentDownloadInfo == null)
                 {
+                    if (m_SegmentDownloader.IsDownloadFinished)
+                    {
+                        m_SegmentDownloader.SetDownloadFinishDate(DateTime.Now);                        
+                    }
+
                     return;
                 }
 
