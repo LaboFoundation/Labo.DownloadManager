@@ -159,5 +159,22 @@ namespace Labo.DownloadManager.Segment
         /// The URI.
         /// </value>
         public abstract Uri Uri { get; }
+
+        /// <summary>
+        /// Gets the download finish date.
+        /// </summary>
+        /// <value>
+        /// The download finish date.
+        /// </value>
+        public DateTime? DownloadFinishDate { get; private set; }
+
+        /// <summary>
+        /// Sets the download finish date.
+        /// </summary>
+        /// <param name="date">The finish date.</param>
+        public void SetDownloadFinishDate(DateTime date)
+        {
+            DownloadFinishDate = date;
+        }
     }
 }
