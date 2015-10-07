@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Win.UI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Tests.FileServer", "Labo.DownloadManager.Tests.FileServer\Labo.DownloadManager.Tests.FileServer.csproj", "{58871737-A389-45A3-A13F-51DFF84A41C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Win.Controls", "Labo.DownloadManager.Win.Controls\Labo.DownloadManager.Win.Controls.csproj", "{95B01121-6166-456B-91C2-A2984AE7D581}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{58871737-A389-45A3-A13F-51DFF84A41C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58871737-A389-45A3-A13F-51DFF84A41C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58871737-A389-45A3-A13F-51DFF84A41C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95B01121-6166-456B-91C2-A2984AE7D581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95B01121-6166-456B-91C2-A2984AE7D581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95B01121-6166-456B-91C2-A2984AE7D581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95B01121-6166-456B-91C2-A2984AE7D581}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

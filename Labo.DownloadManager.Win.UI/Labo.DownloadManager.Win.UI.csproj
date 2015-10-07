@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Labo.DownloadManager.Win.UI</RootNamespace>
     <AssemblyName>Labo.DownloadManager.Win.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -47,16 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DownloadTaskList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="DownloadTaskList.Designer.cs">
-      <DependentUpon>DownloadTaskList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Helper\ByteFormatter.cs" />
-    <Compile Include="Helper\FileTypeImageList.cs" />
-    <Compile Include="Helper\IconReader.cs" />
-    <Compile Include="Helper\TimeSpanFormatter.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,9 +61,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="DownloadTaskList.resx">
-      <DependentUpon>DownloadTaskList.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +89,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Labo.DownloadManager.Win.Controls\Labo.DownloadManager.Win.Controls.csproj">
+      <Project>{95b01121-6166-456b-91c2-a2984ae7d581}</Project>
+      <Name>Labo.DownloadManager.Win.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Labo.DownloadManager\Labo.DownloadManager.csproj">
       <Project>{2b9cd4e3-f915-45a2-87da-820f1519fe78}</Project>
       <Name>Labo.DownloadManager</Name>

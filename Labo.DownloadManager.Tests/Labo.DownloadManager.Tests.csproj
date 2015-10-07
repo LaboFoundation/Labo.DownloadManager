@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Labo.DownloadManager.Tests</RootNamespace>
     <AssemblyName>Labo.DownloadManager.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Moq">
@@ -49,6 +52,7 @@
     <Compile Include="BaseSegmentDownloadTaskTestFixture.cs" />
     <Compile Include="DoubleBufferSegmentDownloadManagerTestFixture.cs" />
     <Compile Include="DoubleBufferSegmentDownloadTaskTestFixture.cs" />
+    <Compile Include="DownloadHelperTestFixture.cs" />
     <Compile Include="DownloadManagerTestFixture.cs" />
     <Compile Include="DownloadSegmentPositionsCalculatorTestFixture.cs" />
     <Compile Include="DownloadStream.cs" />
@@ -63,6 +67,7 @@
     <Compile Include="SegmentDownloadManagerTestFixture.cs" />
     <Compile Include="SegmentDownloadTaskTestFixture.cs" />
     <Compile Include="SegmentWriterSimulator.cs" />
+    <Compile Include="TestOutputStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Labo.DownloadManager\Labo.DownloadManager.csproj">

@@ -1,4 +1,4 @@
-﻿namespace Labo.DownloadManager.Win.UI
+﻿namespace Labo.DownloadManager.Win.Controls
 {
     partial class DownloadTaskList
     {

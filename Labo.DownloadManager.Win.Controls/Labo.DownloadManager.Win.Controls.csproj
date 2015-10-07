@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{58871737-A389-45A3-A13F-51DFF84A41C1}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{95B01121-6166-456B-91C2-A2984AE7D581}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Labo.DownloadManager.Tests.FileServer</RootNamespace>
-    <AssemblyName>Labo.DownloadManager.Tests.FileServer</AssemblyName>
+    <RootNamespace>Labo.DownloadManager.Win.Controls</RootNamespace>
+    <AssemblyName>Labo.DownloadManager.Win.Controls</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,24 +28,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\sharedlibs\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Http.SelfHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,30 +41,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentInfo.cs" />
-    <Compile Include="ILoggingSource.cs" />
-    <Compile Include="LimittedCollection.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="DownloadTaskList.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="DownloadTaskList.Designer.cs">
+      <DependentUpon>DownloadTaskList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MimeType.cs" />
-    <Compile Include="PartialReadFileStream.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Server.cs" />
-    <Compile Include="DownloadStream.cs" />
+    <Compile Include="Helper\ByteFormatter.cs" />
+    <Compile Include="Helper\FileTypeImageList.cs" />
+    <Compile Include="Helper\IconReader.cs" />
+    <Compile Include="Helper\TimeSpanFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="DownloadTaskList.resx">
+      <DependentUpon>DownloadTaskList.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\Labo.DownloadManager\Labo.DownloadManager.csproj">
+      <Project>{2B9CD4E3-F915-45A2-87DA-820F1519FE78}</Project>
+      <Name>Labo.DownloadManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

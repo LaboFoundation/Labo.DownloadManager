@@ -1,5 +1,7 @@
 ﻿namespace Labo.DownloadManager.Win.UI
 {
+    using Labo.DownloadManager.Win.Controls;
+
     partial class MainForm
     {
         /// <summary>
@@ -38,7 +40,7 @@
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
-            this.downloadTaskList = new Labo.DownloadManager.Win.UI.DownloadTaskList();
+            this.downloadTaskList = new DownloadTaskList(new DownloadHelper());
             this.menuStripMain.SuspendLayout();
             this.toolStripMain.SuspendLayout();
             this.SuspendLayout();

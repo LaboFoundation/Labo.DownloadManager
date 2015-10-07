@@ -1,4 +1,4 @@
-﻿namespace Labo.DownloadManager.Win.UI.Helper
+﻿namespace Labo.DownloadManager.Win.Controls.Helper
 {
     public static class ByteFormatter
     {

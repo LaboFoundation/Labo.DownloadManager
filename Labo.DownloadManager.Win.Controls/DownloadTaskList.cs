@@ -1,4 +1,4 @@
-﻿namespace Labo.DownloadManager.Win.UI
+﻿namespace Labo.DownloadManager.Win.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
     using System.Windows.Forms;
 
     using Labo.DownloadManager.Segment;
-    using Labo.DownloadManager.Win.UI.Helper;
+    using Labo.DownloadManager.Win.Controls.Helper;
 
     public partial class DownloadTaskList : UserControl
     {
@@ -16,11 +16,11 @@
 
         private ListViewItem m_LastDownloadTaskSelection;
 
-        public DownloadTaskList()
+        public DownloadTaskList(DownloadHelper downloadHelper)
         {
             InitializeComponent();
 
-            m_DownloadHelper = new DownloadHelper();
+            m_DownloadHelper = downloadHelper;
             m_DownloadTaskItemMap = new Dictionary<ListViewItem, Guid>();
             m_DownloadHelper.Start();
         }
