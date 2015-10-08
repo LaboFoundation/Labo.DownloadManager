@@ -7,6 +7,11 @@
         public MainForm()
         {
             InitializeComponent();
+
+            DownloadHelper downloadHelper = new DownloadHelper();
+            downloadHelper.Start();
+
+            downloadTaskList.Init(downloadHelper);
         }
 
         private void tsbNewDownload_Click(object sender, System.EventArgs e)

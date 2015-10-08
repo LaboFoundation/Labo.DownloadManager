@@ -40,7 +40,7 @@
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
-            this.downloadTaskList = new DownloadTaskList(new DownloadHelper());
+            this.downloadTaskList = new DownloadTaskList();
             this.menuStripMain.SuspendLayout();
             this.toolStripMain.SuspendLayout();
             this.SuspendLayout();
