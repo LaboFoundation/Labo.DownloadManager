@@ -11,51 +11,80 @@
 
     public partial class DownloadTaskList : UserControl
     {
-        private readonly DownloadHelper m_DownloadHelper;
-        private readonly Dictionary<ListViewItem, Guid> m_DownloadTaskItemMap;
-
+        private DownloadHelper m_DownloadHelper;
+        private Dictionary<ListViewItem, Guid> m_DownloadTaskItemMap;
+        private HashSet<Guid> m_DownloadTaskGuids = new HashSet<Guid>();
         private ListViewItem m_LastDownloadTaskSelection;
 
-        public DownloadTaskList(DownloadHelper downloadHelper)
+        public DownloadTaskList()
         {
             InitializeComponent();
+        }
 
+        public DownloadHelper DownloadHelper
+        {
+            get
+            {
+                if (m_DownloadHelper == null)
+                {
+                    throw new InvalidOperationException("Download Helper is not initialized.");
+                }
+
+                return m_DownloadHelper;
+            }
+        }
+
+        public void Init(DownloadHelper downloadHelper)
+        {
             m_DownloadHelper = downloadHelper;
             m_DownloadTaskItemMap = new Dictionary<ListViewItem, Guid>();
-            m_DownloadHelper.Start();
         }
 
         public void AddNewDownloadTask(DownloadTaskInfo downloadTaskInfo)
         {
-            Guid newTaskGuid = m_DownloadHelper.AddNewDownloadTask(downloadTaskInfo);
+            Guid newTaskGuid = DownloadHelper.AddNewDownloadTask(downloadTaskInfo);
 
-            ListViewItem item = new ListViewItem();
+            AddExistingDownloadTask(DownloadHelper.GetDownloadTaskStatistics(newTaskGuid));
+        }
 
-            DownloadTaskStatistics downloadTaskStatistics = m_DownloadHelper.GetDownloadTaskStatistics(newTaskGuid);
+        private void AddExistingDownloadTask(DownloadTaskStatistics downloadTaskStatistics)
+        {
+            Guid taskGuid = downloadTaskStatistics.Guid;
 
-            string fileName = downloadTaskInfo.DownloadFileInfo.FileName;
-            string fileExtension = Path.GetExtension(fileName);
-            item.ImageIndex = FileTypeImageList.GetImageIndexByExtention(fileExtension);
-            item.Text = Path.GetFileName(fileName);
+            lock (m_DownloadTaskItemMap)
+            {
+                if (!m_DownloadTaskGuids.Contains(taskGuid))
+                {
+                    ListViewItem item = new ListViewItem();
 
-            item.SubItems.Add(ByteFormatter.ToString(downloadTaskStatistics.FileSize));
-            item.SubItems.Add(ByteFormatter.ToString(downloadTaskStatistics.TransferedDownload));
-            item.SubItems.Add(GetDownloadProgressText(downloadTaskStatistics));
-            item.SubItems.Add(TimeSpanFormatter.ToString(downloadTaskStatistics.RemainingTime));
-            item.SubItems.Add("0");
-            item.SubItems.Add("0");
-            item.SubItems.Add(string.Format(CultureInfo.CurrentCulture, "{0} {1}", downloadTaskStatistics.CreatedDate.ToShortDateString(), downloadTaskStatistics.CreatedDate.ToShortTimeString()));
-            item.SubItems.Add(downloadTaskStatistics.DownloadTaskState.ToString());
-            item.SubItems.Add(GetResumeText(downloadTaskStatistics));
-            item.SubItems.Add(downloadTaskStatistics.FileUri.OriginalString);
+                    string fileName = downloadTaskStatistics.FileName;
+                    string fileExtension = Path.GetExtension(fileName);
+                    item.ImageIndex = FileTypeImageList.GetImageIndexByExtention(fileExtension);
+                    item.Text = Path.GetFileName(fileName);
 
-            m_DownloadTaskItemMap[item] = newTaskGuid;
+                    item.SubItems.Add(ByteFormatter.ToString(downloadTaskStatistics.FileSize));
+                    item.SubItems.Add(ByteFormatter.ToString(downloadTaskStatistics.TransferedDownload));
+                    item.SubItems.Add(GetDownloadProgressText(downloadTaskStatistics));
+                    item.SubItems.Add(TimeSpanFormatter.ToString(downloadTaskStatistics.RemainingTime));
+                    item.SubItems.Add("0");
+                    item.SubItems.Add("0");
+                    item.SubItems.Add(string.Format(CultureInfo.CurrentCulture, "{0} {1}", downloadTaskStatistics.CreatedDate.ToShortDateString(), downloadTaskStatistics.CreatedDate.ToShortTimeString()));
+                    item.SubItems.Add(downloadTaskStatistics.DownloadTaskState.ToString());
+                    item.SubItems.Add(GetResumeText(downloadTaskStatistics));
+                    item.SubItems.Add(downloadTaskStatistics.FileUri.OriginalString);
 
-            lvwDownloadTasks.Items.Add(item);
+                    m_DownloadTaskItemMap[item] = taskGuid;
+                    m_DownloadTaskGuids.Add(taskGuid);
+
+                    lvwDownloadTasks.Items.Add(item);
+                }
+            }
         }
 
         public void UpdateList()
         {
+            UpdateListForNewDownloads();
+
             ListView.ListViewItemCollection listViewItemCollection = lvwDownloadTasks.Items;
             for (int i = 0; i < listViewItemCollection.Count; i++)
             {
@@ -66,7 +95,7 @@
                 }
 
                 Guid guid = m_DownloadTaskItemMap[item];
-                DownloadTaskStatistics downloadTaskStatistics = m_DownloadHelper.GetDownloadTaskStatistics(guid);
+                DownloadTaskStatistics downloadTaskStatistics = DownloadHelper.GetDownloadTaskStatistics(guid);
                 if (downloadTaskStatistics == null)
                 {
                     return;
@@ -112,6 +141,16 @@
             UpdateSegments();
         }
 
+        private void UpdateListForNewDownloads()
+        {
+            IList<DownloadTaskStatistics> downloadTaskStatisticsList = DownloadHelper.GetDownloadTaskStatistics();
+            for (int i = 0; i < downloadTaskStatisticsList.Count; i++)
+            {
+                DownloadTaskStatistics downloadTaskStatistics = downloadTaskStatisticsList[i];
+                AddExistingDownloadTask(downloadTaskStatistics);
+            }
+        }
+
         private void UpdateSegments()
         {
             try
@@ -122,7 +161,7 @@
                 {
                     ListViewItem newDownloadTaskSelection = lvwDownloadTasks.SelectedItems[0];
                     Guid guid = m_DownloadTaskItemMap[newDownloadTaskSelection];
-                    DownloadTaskStatistics downloadTaskStatistics = m_DownloadHelper.GetDownloadTaskStatistics(guid);
+                    DownloadTaskStatistics downloadTaskStatistics = DownloadHelper.GetDownloadTaskStatistics(guid);
 
                     if (m_LastDownloadTaskSelection == newDownloadTaskSelection)
                     {

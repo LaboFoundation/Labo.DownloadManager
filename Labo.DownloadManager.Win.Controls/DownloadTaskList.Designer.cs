@@ -35,6 +35,7 @@
             this.columnProgress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnRemaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnAvgSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnState = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnResume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -53,7 +54,6 @@
             this.columnSegmentState = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnSegmentUrl = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpDownloadTaskLogs = new System.Windows.Forms.TabPage();
-            this.columnAvgSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbDownloadTaskInfo.SuspendLayout();
             this.tpDownloadTaskSegments.SuspendLayout();
             this.SuspendLayout();
@@ -112,6 +112,11 @@
             // 
             this.columnSpeed.Text = "Speed";
             // 
+            // columnAvgSpeed
+            // 
+            this.columnAvgSpeed.Text = "Avg. Speed";
+            this.columnAvgSpeed.Width = 80;
+            // 
             // columnDate
             // 
             this.columnDate.Text = "Date";
@@ -135,10 +140,11 @@
             this.tbDownloadTaskInfo.Controls.Add(this.tpDownloadTaskInfo);
             this.tbDownloadTaskInfo.Controls.Add(this.tpDownloadTaskSegments);
             this.tbDownloadTaskInfo.Controls.Add(this.tpDownloadTaskLogs);
-            this.tbDownloadTaskInfo.Location = new System.Drawing.Point(0, 179);
+            this.tbDownloadTaskInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tbDownloadTaskInfo.Location = new System.Drawing.Point(0, 182);
             this.tbDownloadTaskInfo.Name = "tbDownloadTaskInfo";
             this.tbDownloadTaskInfo.SelectedIndex = 0;
-            this.tbDownloadTaskInfo.Size = new System.Drawing.Size(697, 128);
+            this.tbDownloadTaskInfo.Size = new System.Drawing.Size(700, 128);
             this.tbDownloadTaskInfo.TabIndex = 1;
             // 
             // tpDownloadTaskInfo
@@ -146,7 +152,7 @@
             this.tpDownloadTaskInfo.Location = new System.Drawing.Point(4, 22);
             this.tpDownloadTaskInfo.Name = "tpDownloadTaskInfo";
             this.tpDownloadTaskInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tpDownloadTaskInfo.Size = new System.Drawing.Size(689, 102);
+            this.tpDownloadTaskInfo.Size = new System.Drawing.Size(692, 102);
             this.tpDownloadTaskInfo.TabIndex = 0;
             this.tpDownloadTaskInfo.Text = "Task Info";
             this.tpDownloadTaskInfo.UseVisualStyleBackColor = true;
@@ -232,11 +238,6 @@
             this.tpDownloadTaskLogs.TabIndex = 2;
             this.tpDownloadTaskLogs.Text = "Logs";
             this.tpDownloadTaskLogs.UseVisualStyleBackColor = true;
-            // 
-            // columnAvgSpeed
-            // 
-            this.columnAvgSpeed.Text = "Avg. Speed";
-            this.columnAvgSpeed.Width = 80;
             // 
             // DownloadTaskList
             // 
