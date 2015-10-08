@@ -16,7 +16,7 @@
 
         public Guid Add(IDownloadTask downloadTask)
         {
-            Guid guid = Guid.NewGuid();
+            Guid guid = downloadTask.Guid;
             m_DownloadTasks.TryAdd(guid, downloadTask);
 
             return guid;

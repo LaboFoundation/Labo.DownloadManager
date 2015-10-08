@@ -124,6 +124,8 @@
             m_DownloadStreamManager = downloadStreamManager;
             m_EventManager = eventManager;
             m_CreateDate = DateTime.Now;
+
+            Guid = Guid.NewGuid();
         }
 
         /// <summary>
@@ -166,6 +168,14 @@
         {
             get { return m_EventManager; }
         }
+
+        /// <summary>
+        /// Gets the GUID.
+        /// </summary>
+        /// <value>
+        /// The GUID.
+        /// </value>
+        public Guid Guid { get; private set; }
 
         /// <summary>
         /// Starts the download task.
@@ -256,8 +266,10 @@
                                            : DateTime.Now - m_StartDate.Value;
             }
 
+            downloadTaskStatistics.Guid = Guid;
             downloadTaskStatistics.DownloadTaskState = State;
             downloadTaskStatistics.FileUri = m_File.Uri;
+            downloadTaskStatistics.FileName = m_File.FileName;
             downloadTaskStatistics.LastError = m_LastException == null ? string.Empty : m_LastException.Message;
             downloadTaskStatistics.CreatedDate = m_CreateDate;
             downloadTaskStatistics.IsDownloadResumable = m_IsResumable;

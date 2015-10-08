@@ -1,10 +1,20 @@
 namespace Labo.DownloadManager
 {
+    using System;
+
     /// <summary>
     /// The download task interface.
     /// </summary>
     public interface IDownloadTask
     {
+        /// <summary>
+        /// Gets the GUID.
+        /// </summary>
+        /// <value>
+        /// The GUID.
+        /// </value>
+        Guid Guid { get; }
+
         /// <summary>
         /// Starts the download task.
         /// </summary>
