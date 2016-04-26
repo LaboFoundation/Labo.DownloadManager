@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Tests.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Win.Controls", "Labo.DownloadManager.Win.Controls\Labo.DownloadManager.Win.Controls.csproj", "{95B01121-6166-456B-91C2-A2984AE7D581}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labo.DownloadManager.Extensions.Chrome.MessagingHost", "Labo.DownloadManager.Extensions.Chrome.MessagingHost\Labo.DownloadManager.Extensions.Chrome.MessagingHost.csproj", "{4C583EA2-1033-4CAF-B502-75089F081371}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{95B01121-6166-456B-91C2-A2984AE7D581}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95B01121-6166-456B-91C2-A2984AE7D581}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95B01121-6166-456B-91C2-A2984AE7D581}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C583EA2-1033-4CAF-B502-75089F081371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C583EA2-1033-4CAF-B502-75089F081371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C583EA2-1033-4CAF-B502-75089F081371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C583EA2-1033-4CAF-B502-75089F081371}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
