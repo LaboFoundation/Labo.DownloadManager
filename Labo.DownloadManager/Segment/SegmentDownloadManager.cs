@@ -6,9 +6,20 @@
 
     public sealed class SegmentDownloadManager
     {
-        private readonly Queue<ISegmentDownloadTask> m_Downloaders;
         private readonly object m_Locker = new object();
-        private readonly Thread[] m_Workers;
+
+        private Queue<ISegmentDownloadTask> m_DownloadersQueue;
+        private Thread[] m_Workers;
+
+        private readonly SegmentDownloadTaskCollection m_SegmentDownloadTaskCollection;
+
+        public SegmentDownloadTaskCollection SegmentDownloadTasks
+        {
+            get
+            {
+                return m_SegmentDownloadTaskCollection;
+            }
+        }
 
         public SegmentDownloadManager(SegmentDownloadTaskCollection downloaders)
         {
@@ -17,31 +28,40 @@
                 throw new ArgumentNullException("downloaders");
             }
 
-            m_Downloaders = new Queue<ISegmentDownloadTask>(downloaders);
-            m_Workers = new Thread[downloaders.Count];
-
-            for (int i = 0; i < downloaders.Count; i++)
-            {
-                m_Workers[i] = new Thread(DoDownload);
-            }
+            m_SegmentDownloadTaskCollection = downloaders;
         }
 
         public void EnqueueDownloader(ISegmentDownloadTask segmentDownloader)
         {
             lock (m_Locker)
             {
-                m_Downloaders.Enqueue(segmentDownloader);
+                m_DownloadersQueue.Enqueue(segmentDownloader);
                 Monitor.Pulse(m_Locker);
             }
         }
 
         public void Start()
         {
+            m_DownloadersQueue = new Queue<ISegmentDownloadTask>(SegmentDownloadTasks);
+            m_Workers = new Thread[SegmentDownloadTasks.Count];
+
+            for (int i = 0; i < SegmentDownloadTasks.Count; i++)
+            {
+                m_Workers[i] = new Thread(DoDownload);
+            }
+
             for (int i = 0; i < m_Workers.Length; i++)
             {
                 Thread worker = m_Workers[i];
                 worker.Start();
             }
+        }
+
+        public void Pause()
+        {
+            SegmentDownloadTasks.PauseAll();
+
+            Finish(true);
         }
 
         public void Finish(bool waitForDownloads)
@@ -71,23 +91,30 @@
         {
             while (true)
             {
-                ISegmentDownloadTask downloader;
-                lock (m_Locker)
+                try
                 {
-                    while (m_Downloaders.Count == 0)
+                    ISegmentDownloadTask downloader;
+                    lock (m_Locker)
                     {
-                        Monitor.Wait(m_Locker);
+                        while (m_DownloadersQueue.Count == 0)
+                        {
+                            Monitor.Wait(m_Locker);
+                        }
+
+                        downloader = m_DownloadersQueue.Dequeue();
                     }
 
-                    downloader = m_Downloaders.Dequeue();
-                }
+                    if (downloader == null)
+                    {
+                        return;
+                    }
 
-                if (downloader == null)
+                    downloader.Download();
+                }
+                catch (Exception ex)
                 {
-                    return;
+                    ex.ToString();
                 }
-
-                downloader.Download();
             }
         }
     }
