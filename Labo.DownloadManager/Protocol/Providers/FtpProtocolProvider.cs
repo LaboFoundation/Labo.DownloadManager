@@ -12,7 +12,7 @@ namespace Labo.DownloadManager.Protocol.Providers
             m_WebRequestManager = webRequestManager;
         }
 
-        public RemoteFileInfo GetRemoteFileInfo(DownloadFileInfo file)
+        public RemoteFileInfo GetRemoteFileInfo(DownloadFileRequestInfo file)
         {
             RemoteFileInfo remoteFileInfo = new RemoteFileInfo();
             remoteFileInfo.AcceptRanges = true;
@@ -36,7 +36,7 @@ namespace Labo.DownloadManager.Protocol.Providers
             return remoteFileInfo;
         }
 
-        public Stream CreateStream(DownloadFileInfo file, long startPosition, long endPosition)
+        public Stream CreateStream(DownloadFileRequestInfo file, long startPosition, long endPosition)
         {
             FtpWebRequest request = (FtpWebRequest)m_WebRequestManager.GetWebRequest(file);
 

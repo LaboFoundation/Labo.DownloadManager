@@ -4,8 +4,8 @@ namespace Labo.DownloadManager.Protocol
 {
     public interface INetworkProtocolProvider
     {
-        RemoteFileInfo GetRemoteFileInfo(DownloadFileInfo file);
+        RemoteFileInfo GetRemoteFileInfo(DownloadFileRequestInfo file);
 
-        Stream CreateStream(DownloadFileInfo file, long startPosition, long endPosition);
+        Stream CreateStream(DownloadFileRequestInfo file, long startPosition, long endPosition);
     }
 }
