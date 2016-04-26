@@ -22,6 +22,13 @@
             return guid;
         }
 
+        public IDownloadTask GetDownloadTaskByGuid(Guid guid)
+        {
+            IDownloadTask downloadTask;
+            m_DownloadTasks.TryGetValue(guid, out downloadTask);
+            return downloadTask;
+        }
+
         public IList<DownloadTaskStatistics> GetDownloadTaskStatistics()
         {
             return m_DownloadTasks.Select(x => x.Value.GetDownloadTaskStatistics()).ToList();

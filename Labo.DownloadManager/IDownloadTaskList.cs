@@ -10,5 +10,7 @@ namespace Labo.DownloadManager
         IList<DownloadTaskStatistics> GetDownloadTaskStatistics();
 
         DownloadTaskStatistics GetDownloadTaskStatistics(Guid guid);
+
+        IDownloadTask GetDownloadTaskByGuid(Guid guid);
     }
 }
