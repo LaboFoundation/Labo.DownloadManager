@@ -144,7 +144,7 @@
 
             try
             {
-                File.WriteAllBytes(tempFile, new byte[1] { 0 });
+                File.WriteAllBytes(tempFile, new byte[] { 0 });
 
                 return GetFileIcon(tempFile, size, addLinkOverlay);
             }

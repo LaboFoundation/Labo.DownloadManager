@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lblUrl = new System.Windows.Forms.Label();
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.txtDownloadFolder = new System.Windows.Forms.TextBox();
@@ -41,7 +42,11 @@
             this.lblFileName = new System.Windows.Forms.Label();
             this.txtFileName = new System.Windows.Forms.TextBox();
             this.fbdDownloadFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblInfo = new System.Windows.Forms.Label();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nudSegmentsCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // lblUrl
@@ -59,6 +64,9 @@
             this.txtUrl.Name = "txtUrl";
             this.txtUrl.Size = new System.Drawing.Size(353, 20);
             this.txtUrl.TabIndex = 1;
+            this.txtUrl.TextChanged += new System.EventHandler(this.txtUrl_TextChanged);
+            this.txtUrl.Leave += new System.EventHandler(this.txtUrl_Leave);
+            this.txtUrl.Validating += new System.ComponentModel.CancelEventHandler(this.txtUrl_Validating);
             // 
             // txtDownloadFolder
             // 
@@ -66,6 +74,7 @@
             this.txtDownloadFolder.Name = "txtDownloadFolder";
             this.txtDownloadFolder.Size = new System.Drawing.Size(317, 20);
             this.txtDownloadFolder.TabIndex = 2;
+            this.txtDownloadFolder.TextChanged += new System.EventHandler(this.txtDownloadFolder_TextChanged);
             // 
             // lblDownloadFolder
             // 
@@ -89,7 +98,9 @@
             // cbStartNow
             // 
             this.cbStartNow.AutoSize = true;
-            this.cbStartNow.Location = new System.Drawing.Point(15, 134);
+            this.cbStartNow.Checked = true;
+            this.cbStartNow.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbStartNow.Location = new System.Drawing.Point(298, 167);
             this.cbStartNow.Name = "cbStartNow";
             this.cbStartNow.Size = new System.Drawing.Size(73, 17);
             this.cbStartNow.TabIndex = 5;
@@ -98,7 +109,7 @@
             // 
             // nudSegmentsCount
             // 
-            this.nudSegmentsCount.Location = new System.Drawing.Point(15, 178);
+            this.nudSegmentsCount.Location = new System.Drawing.Point(15, 175);
             this.nudSegmentsCount.Maximum = new decimal(new int[] {
             10,
             0,
@@ -113,7 +124,7 @@
             this.nudSegmentsCount.Size = new System.Drawing.Size(41, 20);
             this.nudSegmentsCount.TabIndex = 6;
             this.nudSegmentsCount.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
             0});
@@ -121,7 +132,7 @@
             // lblSegmentsCount
             // 
             this.lblSegmentsCount.AutoSize = true;
-            this.lblSegmentsCount.Location = new System.Drawing.Point(12, 162);
+            this.lblSegmentsCount.Location = new System.Drawing.Point(12, 159);
             this.lblSegmentsCount.Name = "lblSegmentsCount";
             this.lblSegmentsCount.Size = new System.Drawing.Size(85, 13);
             this.lblSegmentsCount.TabIndex = 7;
@@ -129,7 +140,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(215, 206);
+            this.btnOk.Location = new System.Drawing.Point(215, 190);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 8;
@@ -139,7 +150,8 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(296, 206);
+            this.btnCancel.CausesValidation = false;
+            this.btnCancel.Location = new System.Drawing.Point(296, 190);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
@@ -162,12 +174,36 @@
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(293, 20);
             this.txtFileName.TabIndex = 11;
+            this.txtFileName.TextChanged += new System.EventHandler(this.txtFileName_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 133);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(28, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Info:";
+            // 
+            // lblInfo
+            // 
+            this.lblInfo.AutoSize = true;
+            this.lblInfo.Location = new System.Drawing.Point(72, 133);
+            this.lblInfo.Name = "lblInfo";
+            this.lblInfo.Size = new System.Drawing.Size(0, 13);
+            this.lblInfo.TabIndex = 13;
+            // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
             // 
             // NewDownloadForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(377, 236);
+            this.ClientSize = new System.Drawing.Size(391, 221);
+            this.Controls.Add(this.lblInfo);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFileName);
             this.Controls.Add(this.lblFileName);
             this.Controls.Add(this.btnCancel);
@@ -187,6 +223,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "New Download";
             ((System.ComponentModel.ISupportInitialize)(this.nudSegmentsCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -207,5 +244,8 @@
         private System.Windows.Forms.Label lblFileName;
         private System.Windows.Forms.TextBox txtFileName;
         private System.Windows.Forms.FolderBrowserDialog fbdDownloadFolder;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }

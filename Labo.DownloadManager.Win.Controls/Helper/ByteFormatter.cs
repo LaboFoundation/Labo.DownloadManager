@@ -7,11 +7,11 @@
         private const long GB = MB * 1024;
 
         private const string B_FORMAT_PATTERN = "{0} b";
-        private const string KB_FORMAT_PATTERN = "{0:0} KB";
-        private const string MB_FORMAT_PATTERN = "{0:0,###} MB";
-        private const string GB_FORMAT_PATTERN = "{0:0,###.###} GB";
+        private const string KB_FORMAT_PATTERN = "{0:0.##} KB";
+        private const string MB_FORMAT_PATTERN = "{0:0.##} MB";
+        private const string GB_FORMAT_PATTERN = "{0:0.##} GB";
 
-        public static string ToString(long size)
+        public static string ToString(double size)
         {
             if (size < KB)
             {
@@ -25,10 +25,10 @@
             
             if (size >= MB && size < GB)
             {
-                return string.Format(MB_FORMAT_PATTERN, size / 1024.0f);
+                return string.Format(MB_FORMAT_PATTERN, size / MB);
             }
 
-            return string.Format(GB_FORMAT_PATTERN, size / 1024.0f);
+            return string.Format(GB_FORMAT_PATTERN, size / GB);
         }
     }
 }

@@ -33,6 +33,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMain = new System.Windows.Forms.ToolStrip();
@@ -40,18 +41,26 @@
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
-            this.downloadTaskList = new DownloadTaskList();
+            this.downloadTaskList = new Labo.DownloadManager.Win.Controls.DownloadTaskList();
+            this.statusStripMain.SuspendLayout();
             this.menuStripMain.SuspendLayout();
             this.toolStripMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStripMain
             // 
-            this.statusStripMain.Location = new System.Drawing.Point(0, 345);
+            this.statusStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
+            this.statusStripMain.Location = new System.Drawing.Point(0, 359);
             this.statusStripMain.Name = "statusStripMain";
-            this.statusStripMain.Size = new System.Drawing.Size(702, 22);
+            this.statusStripMain.Size = new System.Drawing.Size(704, 22);
             this.statusStripMain.TabIndex = 0;
             this.statusStripMain.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // menuStripMain
             // 
@@ -59,7 +68,7 @@
             this.fileToolStripMenuItem});
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
-            this.menuStripMain.Size = new System.Drawing.Size(702, 24);
+            this.menuStripMain.Size = new System.Drawing.Size(704, 24);
             this.menuStripMain.TabIndex = 1;
             this.menuStripMain.Text = "menuStrip1";
             // 
@@ -76,7 +85,7 @@
             this.toolStripSplitButton1});
             this.toolStripMain.Location = new System.Drawing.Point(0, 24);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(702, 25);
+            this.toolStripMain.Size = new System.Drawing.Size(704, 25);
             this.toolStripMain.TabIndex = 2;
             this.toolStripMain.Text = "toolStrip1";
             // 
@@ -110,29 +119,35 @@
             // tmrRefresh
             // 
             this.tmrRefresh.Enabled = true;
-            this.tmrRefresh.Interval = 1000;
+            this.tmrRefresh.Interval = 1500;
             this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
             // 
             // downloadTaskList
             // 
             this.downloadTaskList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.downloadTaskList.Location = new System.Drawing.Point(0, 49);
+            this.downloadTaskList.Margin = new System.Windows.Forms.Padding(0);
+            this.downloadTaskList.MinimumSize = new System.Drawing.Size(700, 310);
             this.downloadTaskList.Name = "downloadTaskList";
-            this.downloadTaskList.Size = new System.Drawing.Size(702, 296);
+            this.downloadTaskList.Size = new System.Drawing.Size(704, 310);
             this.downloadTaskList.TabIndex = 3;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(702, 367);
+            this.ClientSize = new System.Drawing.Size(704, 381);
             this.Controls.Add(this.downloadTaskList);
             this.Controls.Add(this.toolStripMain);
             this.Controls.Add(this.statusStripMain);
             this.Controls.Add(this.menuStripMain);
             this.MainMenuStrip = this.menuStripMain;
+            this.MinimumSize = new System.Drawing.Size(720, 420);
             this.Name = "MainForm";
             this.Text = "Download Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.statusStripMain.ResumeLayout(false);
+            this.statusStripMain.PerformLayout();
             this.menuStripMain.ResumeLayout(false);
             this.menuStripMain.PerformLayout();
             this.toolStripMain.ResumeLayout(false);
@@ -153,6 +168,7 @@
         private DownloadTaskList downloadTaskList;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.Timer tmrRefresh;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
     }
 }
 

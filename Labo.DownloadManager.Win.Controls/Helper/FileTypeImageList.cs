@@ -1,61 +1,113 @@
 ﻿namespace Labo.DownloadManager.Win.Controls.Helper
 {
+    using System;
+    using System.Collections.Concurrent;
     using System.Drawing;
+    using System.Globalization;
     using System.Windows.Forms;
 
+    /// <summary>
+    /// The file type image list class.
+    /// </summary>
     public sealed class FileTypeImageList
     {
+        /// <summary>
+        /// The open folder key
+        /// </summary>
         private const string OPEN_FOLDER_KEY = "OpenFolderKey";
+
+        /// <summary>
+        /// The close folder key
+        /// </summary>
         private const string CLOSE_FOLDER_KEY = "OpenFolderKey";
 
-        private static ImageList m_ImageList;
+        /// <summary>
+        /// The lock object
+        /// </summary>
+        private static readonly object s_LockObject = new object();
 
-        public static ImageList GetSharedInstance()
+        /// <summary>
+        /// The file type icons dictionary
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, Icon> s_FileTypeIconsDictionary = new ConcurrentDictionary<string, Icon>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// The image list
+        /// </summary>
+        private static ImageList s_ImageList;
+
+        /// <summary>
+        /// Gets the image list.
+        /// </summary>
+        /// <returns>The image list.</returns>
+        public static ImageList GetImageList()
         {
-            if (m_ImageList == null)
+            if (s_ImageList == null)
             {
-                m_ImageList = new ImageList();
-                m_ImageList.TransparentColor = Color.Black;
-                m_ImageList.TransparentColor = Color.Transparent;
-                m_ImageList.ColorDepth = ColorDepth.Depth32Bit;
-                m_ImageList.ImageSize = new Size(16, 16);
+                lock (s_LockObject)
+                {
+                    s_ImageList = new ImageList();
+                    s_ImageList.TransparentColor = Color.Black;
+                    s_ImageList.TransparentColor = Color.Transparent;
+                    s_ImageList.ColorDepth = ColorDepth.Depth32Bit;
+                    s_ImageList.ImageSize = new Size(16, 16);
+                }
             }
 
-            return m_ImageList;
+            return s_ImageList;
         }
 
-        public static int GetImageIndexByExtention(string ext)
+        /// <summary>
+        /// Gets the file type icon.
+        /// </summary>
+        /// <param name="extension">The extension.</param>
+        /// <param name="iconSize">Size of the icon.</param>
+        /// <returns>The icon.</returns>
+        public static Icon GetFileTypeIcon(string extension, IconReader.EnumIconSize iconSize)
         {
-            GetSharedInstance();
+            return s_FileTypeIconsDictionary.GetOrAdd(string.Format(CultureInfo.InvariantCulture, "{0}-{1}", extension, iconSize), s => IconReader.GetFileIconByExt(extension, iconSize, false));
+        }
 
-            ext = ext.ToLower();
+        /// <summary>
+        /// Gets the image index by extension.
+        /// </summary>
+        /// <param name="ext">The ext.</param>
+        /// <returns>The image index.</returns>
+        public static int GetImageIndexByExtension(string ext)
+        {
+            ImageList imageList = GetImageList();
 
-            if (!m_ImageList.Images.ContainsKey(ext))
+            ext = ext.ToLowerInvariant();
+
+            if (!imageList.Images.ContainsKey(ext))
             {
                 Icon iconForFile = IconReader.GetFileIconByExt(ext, IconReader.EnumIconSize.Small, false);
 
-                m_ImageList.Images.Add(ext, iconForFile);
+                imageList.Images.Add(ext, iconForFile);
             }
 
-            return m_ImageList.Images.IndexOfKey(ext);
+            return imageList.Images.IndexOfKey(ext);
         }
 
+        /// <summary>
+        /// Gets the image index from folder.
+        /// </summary>
+        /// <param name="open">if set to <c>true</c> [open].</param>
+        /// <returns>The image index.</returns>
         public static int GetImageIndexFromFolder(bool open)
         {
-            string key;
+            ImageList imageList = GetImageList();
 
-            GetSharedInstance();
+            string key = open ? OPEN_FOLDER_KEY : CLOSE_FOLDER_KEY;
 
-            key = open ? OPEN_FOLDER_KEY : CLOSE_FOLDER_KEY;
-
-            if (!m_ImageList.Images.ContainsKey(key))
+            if (!imageList.Images.ContainsKey(key))
             {
-                Icon iconForFile = IconReader.GetFolderIcon(IconReader.EnumIconSize.Small, (open ? IconReader.EnumFolderType.Open : IconReader.EnumFolderType.Closed));
+                Icon iconForFile = IconReader.GetFolderIcon(IconReader.EnumIconSize.Small, open ? IconReader.EnumFolderType.Open : IconReader.EnumFolderType.Closed);
 
-                m_ImageList.Images.Add(key, iconForFile);
+                imageList.Images.Add(key, iconForFile);
             }
 
-            return m_ImageList.Images.IndexOfKey(key);
+            return imageList.Images.IndexOfKey(key);
         }
     }
 }
