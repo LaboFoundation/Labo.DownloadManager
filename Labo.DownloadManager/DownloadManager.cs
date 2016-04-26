@@ -11,11 +11,27 @@
     public sealed class DownloadManager
     {
         private readonly IDownloadTaskList m_DownloadTaskList;
-        private readonly DownloadTaskQueue m_DownloadTaskQueue;
+        private readonly IDownloadTaskQueue m_DownloadTaskQueue;
         private readonly IDownloadSettings m_DownloadSettings;
         private readonly IDownloadStreamManager m_LocalFileDownloadStreamManager;
         private readonly INetworkProtocolProviderFactory m_NetworkProtocolProviderFactory;
         private readonly IEventManager m_EventManager;
+
+        public int ActiveDownloadsCount
+        {
+            get
+            {
+                return m_DownloadTaskQueue.ActiveDownloadsCount;
+            }
+        }
+
+        public int DownloadQueueLength
+        {
+            get
+            {
+                return m_DownloadTaskQueue.WaitingDownloadsCount;
+            }
+        }
 
         public DownloadManager(IDownloadSettings downloadSettings, 
                                IDownloadStreamManager downloadStreamManager, 
@@ -38,6 +54,26 @@
         public void Start()
         {
             m_DownloadTaskQueue.Start();
+        }
+
+        public void PauseDownloadTask(Guid taskGuid)
+        {
+            IDownloadTask downloadTask = m_DownloadTaskList.GetDownloadTaskByGuid(taskGuid);
+            if (downloadTask != null)
+            {
+                downloadTask.PauseDownload();
+            }
+        }
+
+        public void StartDownloadTask(Guid taskGuid)
+        {
+            IDownloadTask downloadTask = m_DownloadTaskList.GetDownloadTaskByGuid(taskGuid);
+            if (downloadTask.State == DownloadTaskState.Paused || 
+                downloadTask.State == DownloadTaskState.Stopped ||
+                downloadTask.State == DownloadTaskState.EndedWithError)
+            {
+                m_DownloadTaskQueue.EnqueueDownloadTask(downloadTask);                
+            }
         }
 
         public void Shutdown(bool waitForDownloads)
