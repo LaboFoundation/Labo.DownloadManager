@@ -1,41 +1,45 @@
-using System;
-
 namespace Labo.DownloadManager.Segment
 {
+    using System;
+    using System.Collections.Generic;
+
     internal sealed class SegmentDownloadRateCalculator : ISegmentDownloadRateCalculator
     {
-        private DateTime? m_LastCalculation;
-        private long m_LastPosition;
+        private const int ONE_SECOND_TICKS = 10000000;
 
-        public SegmentDownloadRateCalculator(long position)
-        {
-            m_LastPosition = position;
-        }
+        private readonly LinkedList<Tuple<long, long>> m_Bytes = new LinkedList<Tuple<long, long>>();
 
         public double? CalculateDownloadRate(long currentPosition)
         {
-            DateTime now = DateTime.Now;
-            if (!m_LastCalculation.HasValue)
-            {
-                m_LastCalculation = now;
-                m_LastPosition = currentPosition;
-                return null;
-            }
+            long ticks = DateTime.UtcNow.Ticks;
 
-            double seconds = now.Subtract(m_LastCalculation.Value).TotalSeconds;
+            m_Bytes.AddLast(new Tuple<long, long>(currentPosition, ticks));
 
-            m_LastCalculation = now;
-
-            if (Math.Abs(seconds - 0) < 0.00001)
+            if (m_Bytes.Count < 2)
             {
                 return null;
             }
 
-            double rate = (currentPosition - m_LastPosition) / seconds;
+            if (m_Bytes.Count > 2)
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                if (m_Bytes.Last.Value.Item2 - m_Bytes.First.Next.Value.Item2 >= ONE_SECOND_TICKS)
+                {
+                    m_Bytes.RemoveFirst();
+                }
+            }
 
-            m_LastPosition = currentPosition;
+            Tuple<long, long> lastItem = m_Bytes.Last.Value;
+            Tuple<long, long> firstItem = m_Bytes.First.Value;
+            long totalTicks = lastItem.Item2 - firstItem.Item2;
+            if (totalTicks < ONE_SECOND_TICKS)
+            {
+                return null;
+            }
 
-            return rate;
+            double totalSeconds = (double)totalTicks / ONE_SECOND_TICKS;
+            long totalBytes = lastItem.Item1 - firstItem.Item1;
+            return totalBytes / totalSeconds;
         }
     }
 }

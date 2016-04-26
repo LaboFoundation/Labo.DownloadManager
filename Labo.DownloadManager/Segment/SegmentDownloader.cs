@@ -6,68 +6,75 @@
     using Labo.DownloadManager.Protocol;
 
     /// <summary>
-    /// The segment downloader class.
+    /// Bölüt indirici sınıfı.
     /// </summary>
     public sealed class SegmentDownloader : SegmentDownloaderBase
     {
         /// <summary>
-        /// The download file info.
+        /// Dosya indirme bilgisi.
         /// </summary>
         private readonly DownloadFileInfo m_File;
 
         /// <summary>
-        /// The network protocol provider
+        /// Ağ protokolü sağlayıcısı.
         /// </summary>
         private readonly INetworkProtocolProvider m_NetworkProtocolProvider;
 
         /// <summary>
-        /// The segment download rate calculator
+        /// Bölüt indirme hızı hesaplayıcısı.
         /// </summary>
         private readonly ISegmentDownloadRateCalculator m_SegmentDownloadRateCalculator;
 
         /// <summary>
-        /// The segment start position
+        /// Bölüt başlangıç konumu.
         /// </summary>
         private readonly long m_StartPosition;
 
         /// <summary>
-        /// The segment end position
+        /// Bölüt bitiş konumu.
         /// </summary>
         private readonly long m_EndPosition;
 
         /// <summary>
-        /// The current download position
+        /// Mevcut indirme konumu.
         /// </summary>
         private long m_CurrentPosition;
 
         /// <summary>
-        /// The segment download state
+        /// TBölüt indirme durumu.
         /// </summary>
         private SegmentState m_SegmentState;
 
         /// <summary>
-        /// The last exception
+        /// Alınan son hata.
         /// </summary>
         private Exception m_LastException;
 
         /// <summary>
-        /// The last exception time
+        /// Son hata alma zamanı.
         /// </summary>
         private DateTime? m_LastExceptionTime;
 
         /// <summary>
-        /// The download stream
+        /// İndirme kaynağı.
         /// </summary>
         private volatile Stream m_Stream;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SegmentDownloader"/> class.
+        /// Eşzamanlama kilit objesi.
         /// </summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="downloadSegmentInfo">The download segment information.</param>
-        /// <param name="segmentDownloadRateCalculator">The segment download rate calculator.</param>
+        private readonly object m_SyncLock = new object();
+
+        private double? m_Rate;
+
+        /// <summary>
+        /// Yeni bir <see cref="SegmentDownloader"/> sınıfı yaratır.
+        /// </summary>
+        /// <param name="stream">İndirme kaynağı.</param>
+        /// <param name="downloadSegmentInfo">Bölüt indirme bilgisi.</param>
+        /// <param name="segmentDownloadRateCalculator">Bölüt indirme hızı hesaplayıcı.</param>
         /// <exception cref="System.ArgumentNullException">downloadSegmentInfo</exception>
-        public SegmentDownloader(Stream stream, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
+        internal SegmentDownloader(Stream stream, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
         {
             if (downloadSegmentInfo == null)
             {
@@ -82,12 +89,12 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SegmentDownloader"/> class.
+        /// Yeni bir <see cref="SegmentDownloader"/> sınıfı yaratır.
         /// </summary>
-        /// <param name="file">The file.</param>
-        /// <param name="networkProtocolProvider">The network protocol provider.</param>
-        /// <param name="downloadSegmentInfo">The download segment information.</param>
-        /// <param name="segmentDownloadRateCalculator">The segment download rate calculator.</param>
+        /// <param name="file">Dosya indirme bilğisi.</param>
+        /// <param name="networkProtocolProvider">Ağ protokolü sağlayıcısı.</param>
+        /// <param name="downloadSegmentInfo">Bölüt indirme bilgisi.</param>
+        /// <param name="segmentDownloadRateCalculator">Bölüt indirme hızı hesaplayıcı.</param>
         public SegmentDownloader(DownloadFileInfo file, INetworkProtocolProvider networkProtocolProvider, DownloadSegmentPositions downloadSegmentInfo, ISegmentDownloadRateCalculator segmentDownloadRateCalculator)
             : this(null, downloadSegmentInfo, segmentDownloadRateCalculator)
         {
@@ -96,7 +103,7 @@
         }
 
         /// <summary>
-        /// Gets the current position of the segment downloader.
+        /// Bölüt indiricisinin mevcut konumunu getirir.
         /// </summary>
         public override long CurrentPosition
         {
@@ -104,27 +111,29 @@
         }
 
         /// <summary>
-        /// Gets the download rate.
+        /// İndirme hızını getirir.
         /// </summary>
         /// <value>
-        /// The download rate.
+        /// İndirme hızı.
         /// </value>
         public override double? DownloadRate
         {
             get
             {
-                lock (this)
-                {
-                    return m_SegmentDownloadRateCalculator.CalculateDownloadRate(CurrentPosition);
-                }
+                return m_Rate;
+            }
+
+            protected set
+            {
+                m_Rate = value;
             }
         }
 
         /// <summary>
-        /// Gets the start position of the download segment.
+        /// Bölüt indirici için başlangıç konumu.
         /// </summary>
         /// <value>
-        /// The start position.
+        /// Başlangıç konumu.
         /// </value>
         public override long StartPosition
         {
@@ -132,10 +141,10 @@
         }
 
         /// <summary>
-        /// Gets the end position of the download segment.
+        /// Bölüt indirici için bitiş konumu.
         /// </summary>
         /// <value>
-        /// The end position.
+        /// Bitiş konumu.
         /// </value>
         public override long EndPosition
         {
@@ -143,16 +152,16 @@
         }
 
         /// <summary>
-        /// Reads a sequence of bytes from the current stream and advances 
-        /// the position within the stream by the number of bytes read.
+        /// Mevcut kaynaktan istenen sayıda veriyi okuyup tampon dizisine
+        /// yazdıktan sonra kaynağın konumunu okunan byte sayısı kadar arttırır.
         /// </summary>
         /// <param name="buffer">
-        /// An array of bytes that contains the specified byte array with the values which will be replaced 
-        /// by the bytes read from the current source when the method returns.
+        /// Mevcut kaynaktan okunup içerisine aktarılacak olan tampon dizisi.
         /// </param>
         /// <returns>
-        /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if 
-        /// that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+        /// Kaynaktan okunup tampon dizisinin için aktarılan byte sayısı. 
+        /// Bu değer eğer kaynakta yeterli sayıda veri yoksa talep edilen byte sayısından az dönebilir.
+        /// Eğer kaynağın sonuna gelindi ise (0) döner.
         /// </returns>
         public override int Download(byte[] buffer)
         {
@@ -188,37 +197,51 @@
                 throw new InvalidOperationException("readsize cannot be less than 0");
             }
 
+            // CalculateCurrentDownloadRate();
+
             return readSize;
         }
 
+        public override void CalculateCurrentDownloadRate(long currentPosition)
+        {
+            m_Rate = m_SegmentDownloadRateCalculator.CalculateDownloadRate(currentPosition);
+        }
+
         /// <summary>
-        /// Increases the current position of the segment downloader.
+        /// Bölüt indiricinin mevcut konumunu verilen değer kadar arttırır.
         /// </summary>
-        /// <param name="size">The increase size.</param>
+        /// <param name="size">Artış değeri.</param>
         public override void IncreaseCurrentPosition(int size)
         {
-            lock (this)
-            {
+            //lock (this)
+            //{
                 m_CurrentPosition += size;
+            //}
+        }
+
+        /// <summary>
+        /// Bölüt indiricinin durumunu getirir.
+        /// </summary>
+        /// <value>
+        /// Bölüt indirici durumu.
+        /// </value>
+        public override SegmentState State
+        {
+            get
+            {
+                return m_SegmentState;
+            }
+            set
+            {
+                m_SegmentState = value;
             }
         }
 
         /// <summary>
-        /// Gets the state of the download segment.
+        /// Alınan son hatayı getirir.
         /// </summary>
         /// <value>
-        /// The download segment state.
-        /// </value>
-        public override SegmentState State
-        {
-            get { return m_SegmentState; }
-        }
-
-        /// <summary>
-        /// Gets the last exception.
-        /// </summary>
-        /// <value>
-        /// The last exception.
+        /// Alınan son hata.
         /// </value>
         public override Exception LastException
         {
@@ -226,10 +249,10 @@
         }
 
         /// <summary>
-        /// Gets the last exception time.
+        /// Alınan son hatanın zamanını getirir.
         /// </summary>
         /// <value>
-        /// The last exception time.
+        /// Alınan son hatanın zamanı.
         /// </value>
         public override DateTime? LastExceptionTime
         {
@@ -237,10 +260,10 @@
         }
 
         /// <summary>
-        /// Gets the download URI of the segment.
+        /// Bölütün indirme yaptığı adresini getirir.
         /// </summary>
         /// <value>
-        /// The URL.
+        /// İndirme adresi.
         /// </value>
         public override Uri Uri
         {
@@ -248,10 +271,32 @@
         }
 
         /// <summary>
-        /// Gets the segment download stream.
+        /// Alınan hatayı atar.
+        /// </summary>
+        /// <param name="exception">Hata.</param>
+        public override void SetError(Exception exception)
+        {
+            m_LastException = exception;
+            m_LastExceptionTime = DateTime.Now;
+            m_SegmentState = SegmentState.Error;
+        }
+
+        /// <summary>
+        /// İndirme kaynağını günceller.
+        /// </summary>
+        public override void RefreshDownloadStream()
+        {
+            lock (m_SyncLock)
+            {
+                m_Stream = CreateStream();
+            }
+        }
+
+        /// <summary>
+        /// Bölüt indirme kaynağı.
         /// </summary>
         /// <value>
-        /// The stream.
+        /// İndirme kaynağı.
         /// </value>
         private Stream Stream
         {
@@ -259,11 +304,11 @@
             {
                 if (m_Stream == null)
                 {
-                    lock (this)
+                    lock (m_SyncLock)
                     {
                         if (m_Stream == null)
                         {
-                            m_Stream = m_NetworkProtocolProvider.CreateStream(m_File, m_CurrentPosition, m_EndPosition);
+                            m_Stream = CreateStream();
                         }
                     }
                 }
@@ -272,15 +317,12 @@
             }
         }
 
-        /// <summary>
-        /// Sets the error.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        public override void SetError(Exception exception)
+        private Stream CreateStream()
         {
-            m_LastException = exception;
-            m_LastExceptionTime = DateTime.Now;
-            m_SegmentState = SegmentState.Error;
+            return m_NetworkProtocolProvider.CreateStream(
+                new DownloadFileRequestInfo(m_File),
+                m_CurrentPosition, 
+                m_EndPosition);
         }
     }
 }
