@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Labo.DownloadManager
 {
-    internal sealed class TempFileAllocator : ILocalFileAllocator
+    public sealed class TempFileAllocator : ILocalFileAllocator
     {
         private readonly IFileNameCorrector m_FileNameCorrector;
 
@@ -19,7 +19,7 @@ namespace Labo.DownloadManager
                 throw new ArgumentNullException("fileName");
             }
 
-            if(fileSize < 0)
+            if (fileSize < 0)
             {
                 throw new ArgumentOutOfRangeException("fileSize");
             }
@@ -29,12 +29,14 @@ namespace Labo.DownloadManager
             {
                 Directory.CreateDirectory(fileDirectory);
             }
+
             fileName = m_FileNameCorrector.GetFileName(fileName);
 
             using (FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 fs.SetLength(fileSize);
             }
+
             return new LocalFileInfo
                 {
                     FileName = fileName
