@@ -14,9 +14,14 @@ namespace Labo.DownloadManager.Streaming
 
         public Stream CreateStream(RemoteFileInfo remoteFileInfo)
         {
-            if (remoteFileInfo == null) throw new ArgumentNullException("remoteFileInfo");
+            if (remoteFileInfo == null)
+            {
+                throw new ArgumentNullException("remoteFileInfo");
+            }
 
             LocalFileInfo localFileInfo = m_LocalFileAllocator.AllocateFile(remoteFileInfo.FileName, remoteFileInfo.FileSize);
+            remoteFileInfo.FileName = localFileInfo.FileName;
+
             return new FileStream(localFileInfo.FileName, FileMode.Open, FileAccess.Write);
         }
     }
