@@ -1,102 +1,66 @@
 namespace Labo.DownloadManager
 {
-    using System.Collections.Generic;
-    using System.Threading;
+    using System;
+
+    using Labo.Threading;
 
     public sealed class DownloadTaskQueue : IDownloadTaskQueue
     {
-        private readonly Queue<IDownloadTask> m_DownloadTasks;
-        private readonly object m_Locker = new object();
-        private readonly Thread[] m_Workers;
+        private readonly WorkerThreadPool m_WorkerThreadPool;
+
+        public int ActiveDownloadsCount
+        {
+            get
+            {
+                return m_WorkerThreadPool.CurrentWorkItemsCount - m_WorkerThreadPool.WorkItemQueueCount;
+            }
+        }
+
+        public int WaitingDownloadsCount
+        {
+            get
+            {
+                return m_WorkerThreadPool.WorkItemQueueCount;
+            }
+        }
 
         public DownloadTaskQueue(int workerCount)
         {
-            m_DownloadTasks = new Queue<IDownloadTask>();
-            m_Workers = new Thread[workerCount];
+            m_WorkerThreadPool = new WorkerThreadPool(60 * 1000, workerCount, workerCount);
+        }
 
-            for (int i = 0; i < m_Workers.Length; i++)
+        public void ChangeWorkerCount(int workerCount)
+        {
+            if (workerCount < m_WorkerThreadPool.MinWorkerThreads)
             {
-                m_Workers[i] = new Thread(DoDownload);
+                m_WorkerThreadPool.SetMinimumWorkerThreadsCount(workerCount);
+                m_WorkerThreadPool.SetMaximumWorkerThreadsCount(workerCount);
+            }
+            else
+            {
+                m_WorkerThreadPool.SetMaximumWorkerThreadsCount(workerCount);
+                m_WorkerThreadPool.SetMinimumWorkerThreadsCount(workerCount);
             }
         }
 
         public void EnqueueDownloadTask(IDownloadTask downloadTask)
         {
-            lock (m_Locker)
+            if (downloadTask == null)
             {
-                m_DownloadTasks.Enqueue(downloadTask);
-
-                if (downloadTask != null)
-                {
-                    downloadTask.ChangeState(DownloadTaskState.Queued);
-                }
-
-                Monitor.Pulse(m_Locker);
+                throw new ArgumentNullException("downloadTask");
             }
+
+            downloadTask.ChangeState(DownloadTaskState.Queued);
+            m_WorkerThreadPool.QueueWorkItem(new ActionWorkItem(() => downloadTask.StartDownload(), downloadTask.PauseDownload));
         }
 
         public void Start()
         {
-            for (int i = 0; i < m_Workers.Length; i++)
-            {
-                Thread worker = m_Workers[i];
-                worker.Start();
-            }
         }
 
         public void Shutdown(bool waitForDownloads)
         {
-            for (int i = 0; i < m_Workers.Length; i++)
-            {
-                EnqueueDownloadTask(null);
-            }
-
-            if (waitForDownloads)
-            {
-                for (int i = 0; i < m_Workers.Length; i++)
-                {
-                    Thread worker = m_Workers[i];
-                    if (worker != null)
-                    {
-                        worker.Join();                        
-                    }
-                }
-            }
-
-            for (int i = 0; i < m_Workers.Length; i++)
-            {
-                Thread worker = m_Workers[i];
-                if (worker != null)
-                {
-                    worker.Abort();                    
-                }
-
-                m_Workers[i] = null;
-            }
-        }
-
-        private void DoDownload()
-        {
-            while (true)
-            {
-                IDownloadTask downloadTask;
-                lock (m_Locker)
-                {
-                    while (m_DownloadTasks.Count == 0)
-                    {
-                        Monitor.Wait(m_Locker);
-                    }
-
-                    downloadTask = m_DownloadTasks.Dequeue();
-                }
-
-                if (downloadTask == null)
-                {
-                    return;
-                }
-
-                downloadTask.StartDownload();
-            }
+           m_WorkerThreadPool.Shutdown(waitForDownloads);
         }
     }
 }

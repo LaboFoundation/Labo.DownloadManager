@@ -7,5 +7,9 @@ namespace Labo.DownloadManager
         void Start();
 
         void Shutdown(bool waitForDownloads);
+
+        int ActiveDownloadsCount { get; }
+
+        int WaitingDownloadsCount { get; }
     }
 }
