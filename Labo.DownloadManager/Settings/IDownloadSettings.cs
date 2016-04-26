@@ -11,5 +11,7 @@
         int MaximumConcurrentDownloads { get; }
 
         int MaximumRetries { get; }
+
+        int RetryDelayTimeInMilliseconds { get; }
     }
 }

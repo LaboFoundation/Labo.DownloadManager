@@ -8,6 +8,8 @@ namespace Labo.DownloadManager.Settings
         private readonly int m_MaximumConcurrentDownloads;
         private readonly int m_MaximumRetries;
 
+        private readonly int m_RetryDelayTimeInMilliseconds;
+
         public int MinimumSegmentSize
         {
             get { return m_MinimumSegmentSize; }
@@ -33,13 +35,22 @@ namespace Labo.DownloadManager.Settings
             get { return m_MaximumRetries; }
         }
 
-        public InMemoryDownloadSettings(int minimumSegmentSize, int maximumSegmentCount, int downloadBufferSize, int maximumConcurrentDownloads, int maximumRetries)
+        public int RetryDelayTimeInMilliseconds
+        {
+            get
+            {
+                return m_RetryDelayTimeInMilliseconds;
+            }
+        }
+
+        public InMemoryDownloadSettings(int minimumSegmentSize, int maximumSegmentCount, int downloadBufferSize, int maximumConcurrentDownloads, int maximumRetries, int retryDelayTimeInMilliseconds)
         {
             m_MinimumSegmentSize = minimumSegmentSize;
             m_MaximumSegmentCount = maximumSegmentCount;
             m_DownloadBufferSize = downloadBufferSize;
             m_MaximumConcurrentDownloads = maximumConcurrentDownloads;
             m_MaximumRetries = maximumRetries;
+            m_RetryDelayTimeInMilliseconds = retryDelayTimeInMilliseconds;
         }
     }
 }
