@@ -18,7 +18,12 @@ namespace Labo.DownloadManager
         /// <summary>
         /// Starts the download task.
         /// </summary>
-        void StartDownload();
+        void StartDownload(bool restart = false);
+
+        /// <summary>
+        /// Pauses the download task.
+        /// </summary>
+        void PauseDownload();
 
         /// <summary>
         /// Determines whether download task is working.

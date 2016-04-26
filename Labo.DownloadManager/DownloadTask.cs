@@ -71,14 +71,23 @@
         private DateTime? m_StartDate;
 
         /// <summary>
-        /// The segment download tasks
-        /// </summary>
-        private SegmentDownloadTaskCollection m_SegmentDownloadTasks;
-
-        /// <summary>
         /// Determines whether download task is resumable
         /// </summary>
         private bool m_IsResumable;
+
+        /// <summary>
+        /// The segment download manager
+        /// </summary>
+        private SegmentDownloadManager m_SegmentDownloadManager;
+
+        /// <summary>
+        /// The lock object
+        /// </summary>
+        private static readonly object s_LockObject = new object();
+
+        private SegmentWriter m_SegmentWriter;
+
+        private RemoteFileInfo m_RemoteFileInfo;
 
         /// <summary>
         /// Gets the state of the download task.
@@ -96,8 +105,8 @@
         /// </returns>
         public bool IsWorking()
         {
-            return State == DownloadTaskState.Working || State == DownloadTaskState.Prepared ||
-                   State == DownloadTaskState.WaitingForReconnect || State == DownloadTaskState.Preparing;
+            DownloadTaskState downloadTaskState = State;
+            return IsWorking(downloadTaskState);
         }
 
         /// <summary>
@@ -140,25 +149,6 @@
         }
 
         /// <summary>
-        /// Gets or sets the segment download tasks.
-        /// </summary>
-        /// <value>
-        /// The segment download tasks.
-        /// </value>
-        private SegmentDownloadTaskCollection SegmentDownloadTasks
-        {
-            get
-            {
-                return m_SegmentDownloadTasks ?? (m_SegmentDownloadTasks = new SegmentDownloadTaskCollection());
-            }
-
-            set
-            {
-                m_SegmentDownloadTasks = value;
-            }
-        }
-
-        /// <summary>
         /// Gets the event manager.
         /// </summary>
         /// <value>
@@ -180,55 +170,76 @@
         /// <summary>
         /// Starts the download task.
         /// </summary>
-        public void StartDownload()
+        public void StartDownload(bool restart = false)
         {
-            RemoteFileInfo remoteFileInfo = null;
-
             try
             {
-                ChangeState(DownloadTaskState.Preparing);
-
-                m_StartDate = DateTime.Now;
-
-                INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Uri);
-
-                remoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(m_File);
-                remoteFileInfo.FileName = m_File.FileName;
-
-                m_FileSize = remoteFileInfo.FileSize;
-                m_IsResumable = remoteFileInfo.AcceptRanges;
-
-                DownloadSegmentPositions[] segmentPositionInfos;
-
-                if (remoteFileInfo.AcceptRanges)
+                if (m_SegmentDownloadManager == null || restart)
                 {
-                    segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, remoteFileInfo.FileSize);                    
-                }
-                else
-                {
-                    segmentPositionInfos = new[] { new DownloadSegmentPositions(0, remoteFileInfo.FileSize - 1) };
-                }
-
-                using (Stream stream = m_DownloadStreamManager.CreateStream(remoteFileInfo))
-                {
-                    SegmentWriter segmentWriter = new SegmentWriter(stream);
-                    SegmentDownloadTasks = new SegmentDownloadTaskCollection(segmentPositionInfos.Length);
-                    for (int i = 0; i < segmentPositionInfos.Length; i++)
+                    lock (s_LockObject)
                     {
-                        DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];
-                        SegmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(m_Settings.DownloadBufferSize, new SegmentDownloader(m_File, networkProtocolProvider, segmentPosition, new SegmentDownloadRateCalculator(segmentPosition.StartPosition)), segmentWriter));
+                        if (m_SegmentDownloadManager == null || restart)
+                        {
+                            ChangeState(DownloadTaskState.Preparing);
+
+                            m_StartDate = DateTime.Now;
+
+                            INetworkProtocolProvider networkProtocolProvider = m_NetworkProtocolProviderFactory.CreateProvider(m_File.Uri);
+
+                            m_RemoteFileInfo = networkProtocolProvider.GetRemoteFileInfo(new DownloadFileRequestInfo(m_File));
+                            m_RemoteFileInfo.FileName = m_File.FileName;
+
+                            m_FileSize = m_RemoteFileInfo.FileSize;
+                            m_IsResumable = m_RemoteFileInfo.AcceptRanges;
+
+                            DownloadSegmentPositions[] segmentPositionInfos;
+
+                            if (m_RemoteFileInfo.AcceptRanges)
+                            {
+                                segmentPositionInfos = m_DownloadSegmentCalculator.Calculate(m_Settings.MinimumSegmentSize, m_Settings.MaximumSegmentCount, m_File.SegmentCount, m_RemoteFileInfo.FileSize);
+                            }
+                            else
+                            {
+                                segmentPositionInfos = new[] { new DownloadSegmentPositions(0, m_RemoteFileInfo.FileSize - 1) };
+                            }
+
+                            m_SegmentWriter = new SegmentWriter();
+
+                            SegmentDownloadTaskCollection segmentDownloadTasks = new SegmentDownloadTaskCollection(segmentPositionInfos.Length);
+                            for (int i = 0; i < segmentPositionInfos.Length; i++)
+                            {
+                                DownloadSegmentPositions segmentPosition = segmentPositionInfos[i];
+                                segmentDownloadTasks.Add(new DoubleBufferSegmentDownloadTask(m_Settings.DownloadBufferSize, m_Settings.MaximumRetries, m_Settings.RetryDelayTimeInMilliseconds, new SegmentDownloader(m_File, networkProtocolProvider, segmentPosition, new SegmentDownloadRateCalculator()), m_SegmentWriter));
+                            }
+
+                            m_SegmentDownloadManager = new SegmentDownloadManager(segmentDownloadTasks);
+
+                            ChangeState(DownloadTaskState.Prepared);
+                        }
+                    }
+                }
+
+                using (Stream stream = m_DownloadStreamManager.CreateStream(m_RemoteFileInfo))
+                {
+                    m_SegmentWriter.SetStream(stream);
+
+                    if (State == DownloadTaskState.Paused)
+                    {
+                        return;
                     }
 
-                    SegmentDownloadManager segmentDownloadManager = new SegmentDownloadManager(SegmentDownloadTasks);
-                    segmentDownloadManager.Start();
+                    m_SegmentDownloadManager.Start();
 
                     ChangeState(DownloadTaskState.Working);
 
-                    segmentDownloadManager.Finish(true);
+                    m_SegmentDownloadManager.Finish(true);
 
-                    ChangeState(DownloadTaskState.Ended);
+                    if (State != DownloadTaskState.Paused)
+                    {
+                        ChangeState(DownloadTaskState.Ended);                        
+                    }
 
-                    m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventMessage(this, stream, remoteFileInfo));
+                    m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventMessage(this, stream, m_RemoteFileInfo));
                 }
             }
             catch (Exception ex)
@@ -245,7 +256,28 @@
 
                     ChangeState(DownloadTaskState.EndedWithError);
 
-                    m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventMessage(this, null, remoteFileInfo));
+                    m_EventManager.EventPublisher.Publish(new DownloadTaskFinishedEventMessage(this, null, m_RemoteFileInfo));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Pauses the download task.
+        /// </summary>
+        public void PauseDownload()
+        {
+            if (m_SegmentDownloadManager != null)
+            {
+                lock (s_LockObject)
+                {
+                    if (m_SegmentDownloadManager != null)
+                    {
+                        ChangeState(DownloadTaskState.Pausing);
+
+                        m_SegmentDownloadManager.Pause();
+
+                        ChangeState(DownloadTaskState.Paused);
+                    }
                 }
             }
         }
@@ -256,27 +288,52 @@
         /// <returns>The download statistics.</returns>
         public DownloadTaskStatistics GetDownloadTaskStatistics()
         {
-            DownloadTaskStatistics downloadTaskStatistics = SegmentDownloadTasks.GetDownloadTaskStatistics();
-
-            TimeSpan elapsedTime = TimeSpan.Zero;
-            if (m_StartDate.HasValue)
+            DownloadTaskStatistics downloadTaskStatistics;
+            SegmentDownloadManager segmentDownloadManager = m_SegmentDownloadManager;
+            if (segmentDownloadManager == null)
             {
-                elapsedTime = downloadTaskStatistics.IsDownloadFinished && downloadTaskStatistics.DownloadFinishDate.HasValue
-                                           ? downloadTaskStatistics.DownloadFinishDate.Value - m_StartDate.Value
-                                           : DateTime.Now - m_StartDate.Value;
+                downloadTaskStatistics = new DownloadTaskStatistics();
             }
+            else
+            {
+                downloadTaskStatistics = segmentDownloadManager.SegmentDownloadTasks.GetDownloadTaskStatistics();
 
+                TimeSpan elapsedTime = TimeSpan.Zero;
+                if (m_StartDate.HasValue)
+                {
+                    elapsedTime = downloadTaskStatistics.IsDownloadFinished && downloadTaskStatistics.DownloadFinishDate.HasValue
+                                               ? downloadTaskStatistics.DownloadFinishDate.Value - m_StartDate.Value
+                                               : DateTime.Now - m_StartDate.Value;
+                }
+
+                downloadTaskStatistics.DownloadProgress = m_FileSize <= 0 ? 0 : (downloadTaskStatistics.TransferedDownload / (double)m_FileSize * 100);
+                downloadTaskStatistics.AverageDownloadRate = downloadTaskStatistics.TransferedDownload <= 0 ? new double?() : (Math.Abs(elapsedTime.TotalSeconds) < 1D ? 0 : downloadTaskStatistics.TransferedDownload / elapsedTime.TotalSeconds);
+            }
+            
             downloadTaskStatistics.Guid = Guid;
             downloadTaskStatistics.DownloadTaskState = State;
             downloadTaskStatistics.FileUri = m_File.Uri;
-            downloadTaskStatistics.FileName = m_File.FileName;
+            downloadTaskStatistics.FileName = m_RemoteFileInfo == null ? m_File.FileName : m_RemoteFileInfo.FileName;
+            downloadTaskStatistics.DownloadLocation = m_File.DownloadLocation;
             downloadTaskStatistics.LastError = m_LastException == null ? string.Empty : m_LastException.Message;
             downloadTaskStatistics.CreatedDate = m_CreateDate;
             downloadTaskStatistics.IsDownloadResumable = m_IsResumable;
             downloadTaskStatistics.FileSize = m_FileSize;
-            downloadTaskStatistics.DownloadProgress = m_FileSize <= 0 ? 0 : (downloadTaskStatistics.TransferedDownload / (double)m_FileSize * 100);
-            downloadTaskStatistics.AverageDownloadRate = downloadTaskStatistics.TransferedDownload <= 0 ? new double?() : (Math.Abs(elapsedTime.TotalSeconds) < 1D ? 0 : downloadTaskStatistics.TransferedDownload / elapsedTime.TotalSeconds);
+
             return downloadTaskStatistics;
+        }
+
+        /// <summary>
+        /// Determines whether the specified download task state is working.
+        /// </summary>
+        /// <param name="downloadTaskState">State of the download task.</param>
+        /// <c>true</c> if [is download task state is working]; otherwise, <c>false</c>.
+        public static bool IsWorking(DownloadTaskState downloadTaskState)
+        {
+            return downloadTaskState == DownloadTaskState.Working 
+                   || downloadTaskState == DownloadTaskState.Prepared
+                   || downloadTaskState == DownloadTaskState.WaitingForReconnect
+                   || downloadTaskState == DownloadTaskState.Preparing;
         }
     }
 }
