@@ -1,11 +1,13 @@
-using System.IO;
 namespace Labo.DownloadManager.Segment
 {
+    using System;
+    using System.IO;
+
     public sealed class SegmentWriter : ISegmentWriter
     {
-        private readonly Stream m_Stream;
+        private Stream m_Stream;
 
-        public SegmentWriter(Stream stream)
+        public void SetStream(Stream stream)
         {
             m_Stream = stream;
         }
@@ -14,6 +16,11 @@ namespace Labo.DownloadManager.Segment
         {
             lock (this)
             {
+                if (m_Stream == null)
+                {
+                    throw new InvalidOperationException("stream is not set");
+                }
+
                 m_Stream.Position = startPosition;
                 m_Stream.Write(buffer, 0, count);
             }
