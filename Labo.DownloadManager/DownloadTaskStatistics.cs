@@ -47,18 +47,18 @@
         public string LastError { get; set; }
 
         /// <summary>
-        /// Gets or sets the remaining bytes to be transfered.
+        /// Gets or sets the remaining bytes to be transferred.
         /// </summary>
         /// <value>
-        /// The remaining bytes to be transfered.
+        /// The remaining bytes to be transferred.
         /// </value>
         public long RemainingTransfer { get; set; }
 
         /// <summary>
-        /// Gets or sets the transfered download.
+        /// Gets or sets the transferred download.
         /// </summary>
         /// <value>
-        /// The transfered download.
+        /// The transferred download.
         /// </value>
         public long TransferedDownload { get; set; }
 
@@ -160,6 +160,14 @@
         /// The name of the file.
         /// </value>
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the download location.
+        /// </summary>
+        /// <value>
+        /// The download location.
+        /// </value>
+        public string DownloadLocation { get; set; }
 
         /// <summary>
         /// Gets or sets the GUID.
