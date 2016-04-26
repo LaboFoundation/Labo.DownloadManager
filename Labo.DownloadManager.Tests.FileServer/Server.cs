@@ -1,18 +1,17 @@
-﻿using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.ServiceModel;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.SelfHost;
-
-namespace Labo.DownloadManager.Tests.FileServer
+﻿namespace Labo.DownloadManager.Tests.FileServer
 {
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.ServiceModel;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.SelfHost;
+
     internal sealed class Server
     {
         private sealed class ContentHandler : HttpMessageHandler
@@ -23,11 +22,12 @@ namespace Labo.DownloadManager.Tests.FileServer
             public ContentHandler(Logger logger)
             {
                 StringBuilder dataBuilder = new StringBuilder();
-                for (int i = 0; i < 200000; i++)
+                for (int i = 0; i < 500000; i++)
                 {
                     dataBuilder.Append(i);
                     dataBuilder.Append(" ");
                 }
+
                 m_Logger = logger;
                 m_Data = Encoding.UTF8.GetBytes(dataBuilder.ToString());
             }

@@ -48,6 +48,7 @@ namespace Labo.DownloadManager.Tests.FileServer
             {
                 return m_MemoryStream.Position;
             }
+
             set
             {
                 m_MemoryStream.Position = value;
@@ -58,7 +59,7 @@ namespace Labo.DownloadManager.Tests.FileServer
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            Thread.Sleep(new Random().Next(50, 100));
+            Thread.Sleep(new Random().Next(200, 500));
 
             int read = m_MemoryStream.Read(buffer, offset, count);
             TotalDownloads += read;
