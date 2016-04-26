@@ -13,17 +13,19 @@ namespace Labo.DownloadManager
 
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                 string fileExtension = Path.GetExtension(fileName);
+                string directoryName = Path.GetDirectoryName(fileName);
 
                 string newFileName;
 
                 do
                 {
-                    newFileName = string.Format(CultureInfo.CurrentCulture, "{0}{1}({2}){3}", Path.GetDirectoryName(fileName), fileNameWithoutExtension, count++, fileExtension);
+                    newFileName = Path.Combine(directoryName, string.Format(CultureInfo.CurrentCulture, "{0}({1}){2}", fileNameWithoutExtension, count++, fileExtension));
                 }
                 while (File.Exists(newFileName));
 
                 return newFileName;
             }
+
             return fileName;
         }
     }
