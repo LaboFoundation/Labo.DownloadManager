@@ -17,6 +17,7 @@ namespace Labo.DownloadManager.Tests
         public override double? DownloadRate
         {
             get { throw new System.NotImplementedException(); }
+            protected set { throw new System.NotImplementedException(); }
         }
 
         public override long StartPosition
@@ -53,6 +54,7 @@ namespace Labo.DownloadManager.Tests
         public override SegmentState State
         {
             get { throw new System.NotImplementedException(); }
+            set { throw new System.NotImplementedException(); }
         }
 
         public override System.Exception LastException
@@ -68,6 +70,16 @@ namespace Labo.DownloadManager.Tests
         public override Uri Uri
         {
             get { throw new System.NotImplementedException(); }
+        }
+
+        public override void RefreshDownloadStream()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void CalculateCurrentDownloadRate(long currentPosition)
+        {
+            throw new NotImplementedException();
         }
     }
 }

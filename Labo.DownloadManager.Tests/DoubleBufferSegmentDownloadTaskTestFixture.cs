@@ -6,7 +6,7 @@ namespace Labo.DownloadManager.Tests
     {
         protected override ISegmentDownloadTask CreateSegmentDownloadTask(int bufferSize, ISegmentDownloader segmentDownloader, ISegmentWriter segmentWriter)
         {
-            return new DoubleBufferSegmentDownloadTask(bufferSize, segmentDownloader, segmentWriter);
+            return new DoubleBufferSegmentDownloadTask(bufferSize, 0, 0, segmentDownloader, segmentWriter);
         }
     }
 }

@@ -32,11 +32,9 @@
                 Directory.CreateDirectory(imagesPath);
             }
 
-            DownloadHelper downloadHelper = new DownloadHelper(new InMemoryDownloadSettings(200, 5, 1024, 5, 5), new LocalFileDownloadStreamManager(new TempFileAllocator(new DefaultFileNameCorrector())));
+            DownloadHelper downloadHelper = new DownloadHelper(new InMemoryDownloadSettings(200, 5, 1024, 5, 5, 0), new LocalFileDownloadStreamManager(new TempFileAllocator(new DefaultFileNameCorrector())));
 
-            downloadHelper.AddNewDownloadTask(
-                new Uri("http://dc455.4shared.com/img/OctFRjPl/s3/13470492140/marika-fruscio-01.jpg"),
-                Path.Combine(imagesPath, "marika-fruscio-01.jpg"));
+            downloadHelper.AddNewDownloadTask(new Uri("http://dc455.4shared.com/img/OctFRjPl/s3/13470492140/marika-fruscio-01.jpg"), Path.Combine(imagesPath, "marika-fruscio-01.jpg"), 5);
 
             downloadHelper.OnDownloadFinished(
                x =>

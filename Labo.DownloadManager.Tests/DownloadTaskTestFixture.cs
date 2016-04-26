@@ -31,7 +31,7 @@ namespace Labo.DownloadManager.Tests
                 networkProtocolProviderFactory,
                 new DownloadSegmentPositionsCalculator(),
                 new MemoryDownloadStreamManager(),
-                new InMemoryDownloadSettings(200, 5, 8096, 5, 5),
+                new InMemoryDownloadSettings(200, 5, 8096, 5, 5, 0),
                 new DownloadFileInfo(new Uri("https://androidnetworktester.googlecode.com/files/1mb.txt"), "1mb.txt", 5),
                 new EventManager());
 

@@ -25,7 +25,7 @@ namespace Labo.DownloadManager.Tests
 
             EventManager eventManager = new EventManager();
             DownloadManager downloadManager = new DownloadManager(
-                new InMemoryDownloadSettings(200, 5, 8096, 5, 5),
+                new InMemoryDownloadSettings(200, 5, 8096, 5, 5, 0),
                 new MemoryDownloadStreamManager(),
                 networkProtocolProviderFactory,
                 eventManager);

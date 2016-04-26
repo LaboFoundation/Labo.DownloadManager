@@ -14,9 +14,6 @@ namespace Labo.DownloadManager.Tests.Protocol
         [TestCase("ftp://www.google.com:80/a.zip", "ftp")]
         [TestCase("custom://www.google.com:80/a.zip", "custom")]
         [TestCase("http://localhost:81/a.zip", "http")]
-        [TestCase("www.google.com", null)]
-        [TestCase("www.google.com:80/", null)]
-        [TestCase("www.google.com:80/a.zip", null)]
         [TestCase(null, null, ExpectedException = typeof(ArgumentNullException))]
         [Test]
         public void Parse(string url, string expectedProtocol)

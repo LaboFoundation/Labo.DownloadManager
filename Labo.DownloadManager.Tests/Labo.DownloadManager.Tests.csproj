@@ -33,6 +33,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Labo.Common, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Labo.Commons.1.0.1\lib\net45\Labo.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
@@ -50,6 +54,7 @@
   <ItemGroup>
     <Compile Include="BaseSegmentDownloadTaskPerformanceTestFixture.cs" />
     <Compile Include="BaseSegmentDownloadTaskTestFixture.cs" />
+    <Compile Include="DefaultFileNameCorrectorFixture.cs" />
     <Compile Include="DoubleBufferSegmentDownloadManagerTestFixture.cs" />
     <Compile Include="DoubleBufferSegmentDownloadTaskTestFixture.cs" />
     <Compile Include="DownloadHelperTestFixture.cs" />

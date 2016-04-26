@@ -11,12 +11,15 @@ namespace Labo.DownloadManager.Tests
 
         protected override ISegmentWriter CreateSegmentWriter(Stream outputStream)
         {
-            return new SegmentWriterSimulator(new SegmentWriter(outputStream));
+            SegmentWriter segmentWriter = new SegmentWriter();
+            segmentWriter.SetStream(outputStream);
+
+            return new SegmentWriterSimulator(segmentWriter);
         }
 
         protected override ISegmentDownloader CreateSegmentDownloader(Stream inputStream, DownloadSegmentPositions downloadSegmentPositions)
         {
-            return new SegmentDownloaderSimulator(new SegmentDownloader(inputStream, downloadSegmentPositions, new SegmentDownloadRateCalculator(downloadSegmentPositions.StartPosition)));
+            return new SegmentDownloaderSimulator(new SegmentDownloader(inputStream, downloadSegmentPositions, new SegmentDownloadRateCalculator()));
         }
 
         protected override void BeforeDownload()

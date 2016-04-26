@@ -24,7 +24,7 @@ namespace Labo.DownloadManager.Tests.Protocol
             webRequestFactoryMock.Setup(x => x.CreateRequest(new Uri(url))).Returns(() => webRequestMock.Object);
 
             WebRequestManager webRequestManager = new WebRequestManager(webRequestFactoryMock.Object);
-            WebRequest webRequest = webRequestManager.GetWebRequest(new DownloadFileInfo(new Uri(url), "file1.txt", 5, authenticate, userName, password));
+            WebRequest webRequest = webRequestManager.GetWebRequest(authenticate ? new DownloadFileRequestInfo(new Uri(url), userName, password) : new DownloadFileRequestInfo(new Uri(url)));
 
             Assert.AreSame(webRequestMock.Object, webRequest);
             Assert.AreEqual(30000, timeout);

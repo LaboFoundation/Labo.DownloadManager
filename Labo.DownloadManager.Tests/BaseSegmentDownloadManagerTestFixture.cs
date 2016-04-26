@@ -65,12 +65,14 @@ namespace Labo.DownloadManager.Tests
 
         protected virtual ISegmentWriter CreateSegmentWriter(Stream outputStream)
         {
-            return new SegmentWriter(outputStream);
+            SegmentWriter segmentWriter = new SegmentWriter();
+            segmentWriter.SetStream(outputStream);
+            return segmentWriter;
         }
 
         protected virtual ISegmentDownloader CreateSegmentDownloader(Stream inputStream, DownloadSegmentPositions downloadSegmentPositions)
         {
-            return new SegmentDownloader(inputStream, downloadSegmentPositions, new SegmentDownloadRateCalculator(downloadSegmentPositions.StartPosition));
+            return new SegmentDownloader(inputStream, downloadSegmentPositions, new SegmentDownloadRateCalculator());
         }
 
         protected virtual void BeforeDownload()
