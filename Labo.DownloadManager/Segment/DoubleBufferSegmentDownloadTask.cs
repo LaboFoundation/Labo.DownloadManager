@@ -16,6 +16,11 @@
         }
 
         private readonly int m_BufferSize;
+
+        private readonly int m_MaxRetryCount;
+
+        private readonly int m_RetryDelayTimeInMilliseconds;
+
         private readonly ISegmentDownloader m_SegmentDownloader;
         private readonly ISegmentWriter m_SegmentWriter;
         private readonly Thread[] m_Threads;
@@ -25,20 +30,72 @@
         private readonly object m_SegmentDownloaderLocker = new object();
         private readonly object m_SegmentWriterLocker = new object();
 
+        private bool m_IsRunning;
+
+        private int m_TryCount;
+
+        private Exception m_LastException;
+
+        private DateTime? m_LastExceptionTime;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="DoubleBufferSegmentDownloadTask"/> class.
+        /// İndirme deneme sayısı.
         /// </summary>
-        /// <param name="bufferSize">Size of the buffer.</param>
-        /// <param name="segmentDownloader">The segment downloader.</param>
-        /// <param name="segmentWriter">The segment writer.</param>
-        public DoubleBufferSegmentDownloadTask(int bufferSize, ISegmentDownloader segmentDownloader, ISegmentWriter segmentWriter)
+        public int TryCount
+        {
+            get { return m_TryCount; }
+        }
+
+        /// <summary>
+        /// Alınan son hatayı getirir.
+        /// </summary>
+        /// <value>
+        /// Alınan son hata.
+        /// </value>
+        public Exception LastException
+        {
+            get { return m_LastException; }
+        }
+
+        /// <summary>
+        /// Alınan son hatanın zamanını getirir.
+        /// </summary>
+        /// <value>
+        /// Alınan son hatanın zamanı.
+        /// </value>
+        public DateTime? LastExceptionTime
+        {
+            get { return m_LastExceptionTime; }
+        }
+
+        /// <summary>
+        /// İndirme deneme sayısını arttırır.
+        /// </summary>
+        /// <returns>Arttırma sonucundaki indirme deneme sayısı.</returns>
+        public int IncreaseTryCount()
+        {
+            return Interlocked.Increment(ref m_TryCount);
+        }
+
+        /// <summary>
+        /// Yeni bir <see cref="DoubleBufferSegmentDownloadTask"/> sınıfı örneği yaratır.
+        /// </summary>
+        /// <param name="bufferSize">Tampon boyutu.</param>
+        /// <param name="retryDelayTimeInMilliseconds">Tekrar deneme için geciktirme süresi.</param>
+        /// <param name="segmentDownloader">Bölüt indirici.</param>
+        /// <param name="segmentWriter">Bölüt yazıcı.</param>
+        /// <param name="maxRetryCount">Maksimum tekrar deneme sayısı.</param>
+        public DoubleBufferSegmentDownloadTask(int bufferSize, int maxRetryCount, int retryDelayTimeInMilliseconds, ISegmentDownloader segmentDownloader, ISegmentWriter segmentWriter)
         {
             m_BufferSize = bufferSize;
+            m_MaxRetryCount = maxRetryCount;
+            m_RetryDelayTimeInMilliseconds = retryDelayTimeInMilliseconds;
             m_SegmentDownloader = segmentDownloader;
             m_SegmentWriter = segmentWriter;
             m_InputBufferQueue = new Queue<byte[]>();
             m_OutputBufferQueue = new Queue<SegmentDownloadInfo>();
             m_Threads = new Thread[2];
+            m_TryCount = 0;
         }
 
         /// <summary>
@@ -63,10 +120,19 @@
             EnqueueDownloadSegment(new byte[m_BufferSize]);
             EnqueueDownloadSegment(new byte[m_BufferSize]);
 
+            m_IsRunning = true;
+
+            m_SegmentDownloader.State = SegmentState.Downloading;
+
             (m_Threads[0] = new Thread(DownloadSegment)).Start();
             (m_Threads[1] = new Thread(WriteSegment)).Start();
 
             Shutdown(true);
+        }
+
+        public void Pause()
+        {
+            m_IsRunning = false;
         }
 
         public void Shutdown(bool waitAllThreads)
@@ -89,54 +155,88 @@
             }
         }
 
+        /// <summary>
+        /// Alınan hatayı atar.
+        /// </summary>
+        /// <param name="exception">Hata.</param>
+        public void SetError(Exception exception)
+        {
+            m_LastException = exception;
+            m_LastExceptionTime = DateTime.Now;
+        }
+
         private void DownloadSegment()
         {
             while (true)
             {
+                byte[] buffer;
+                lock (m_SegmentDownloaderLocker)
+                {
+                    while (m_InputBufferQueue.Count == 0)
+                    {
+                        Monitor.Wait(m_SegmentDownloaderLocker);
+                    }
+
+                    buffer = m_InputBufferQueue.Dequeue();
+                }
+
+                if (buffer == null)
+                {
+                    return;
+                }
+
+                if (!m_IsRunning)
+                {
+                    return;
+                }
+
+                bool retry = false;
+
+            retry:
                 try
                 {
-                    byte[] buffer;
-                    lock (m_SegmentDownloaderLocker)
-                    {
-                        while (m_InputBufferQueue.Count == 0)
-                        {
-                            Monitor.Wait(m_SegmentDownloaderLocker);
-                        }
+                    //lock (m_SegmentDownloader)
+                    //{
 
-                        buffer = m_InputBufferQueue.Dequeue();
+                    if (retry)
+                    {
+                        Thread.Sleep(m_RetryDelayTimeInMilliseconds);
+
+                        m_SegmentDownloader.RefreshDownloadStream();
                     }
 
-                    if (buffer == null)
+                    int size = m_SegmentDownloader.Download(buffer);
+
+                    long currentPosition = m_SegmentDownloader.CurrentPosition;
+
+                    m_SegmentDownloader.IncreaseCurrentPosition(size);
+
+                    EnqueueWriteSegment(new SegmentDownloadInfo
                     {
+                        Buffer = buffer,
+                        CurrentPosition = currentPosition,
+                        Size = size
+                    });
+
+                    if (m_SegmentDownloader.IsDownloadFinished)
+                    {
+                        EnqueueWriteSegment(null);
                         return;
                     }
-
-                    lock (m_SegmentDownloader)
-                    {
-                        int size = m_SegmentDownloader.Download(buffer);
-
-                        long currentPosition = m_SegmentDownloader.CurrentPosition;
-
-                        m_SegmentDownloader.IncreaseCurrentPosition(size);
-
-                        EnqueueWriteSegment(new SegmentDownloadInfo
-                        {
-                            Buffer = buffer,
-                            CurrentPosition = currentPosition,
-                            Size = size
-                        });
-
-                        if (m_SegmentDownloader.IsDownloadFinished)
-                        {
-                            EnqueueWriteSegment(null);
-                            return;
-                        }
-                    }
+                    //}
                 }
                 catch (Exception ex)
                 {
+                    SetError(ex);
+
                     m_SegmentDownloader.SetError(ex);
 
+                    if (!m_SegmentDownloader.IsDownloadFinished && IncreaseTryCount() < m_MaxRetryCount)
+                    {
+                        retry = true;
+                        goto retry;
+                    }
+                   
                     EnqueueWriteSegment(null);
                     return;
                 }
@@ -178,10 +278,7 @@
 
                 if (segmentDownloadInfo == null)
                 {
-                    if (m_SegmentDownloader.IsDownloadFinished)
-                    {
-                        m_SegmentDownloader.SetDownloadFinishDate(DateTime.Now);                        
-                    }
+                    m_SegmentDownloader.SetDownloadFinishDate(DateTime.Now);                        
 
                     return;
                 }
@@ -191,8 +288,20 @@
                     if (segmentDownloadInfo.CurrentPosition != -1)
                     {
                         m_SegmentWriter.Write(segmentDownloadInfo.CurrentPosition, segmentDownloadInfo.Buffer, segmentDownloadInfo.Size);
-                        EnqueueDownloadSegment(new byte[m_BufferSize]);
+                        m_SegmentDownloader.CalculateCurrentDownloadRate(segmentDownloadInfo.CurrentPosition);
+
+                        if (m_IsRunning)
+                        {
+                            EnqueueDownloadSegment(new byte[m_BufferSize]);                            
+                        }
                     }
+                }
+
+                if (!m_IsRunning)
+                {
+                    m_SegmentDownloader.SetDownloadFinishDate(DateTime.Now);
+
+                    return;
                 }
             }
         }

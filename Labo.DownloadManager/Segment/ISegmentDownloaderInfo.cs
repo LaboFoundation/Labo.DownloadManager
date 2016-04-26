@@ -3,107 +3,113 @@ namespace Labo.DownloadManager.Segment
     using System;
 
     /// <summary>
-    /// The segment downloader info interface.
+    /// Bölüt indirme bilgisi arayüzü.
     /// </summary>
     public interface ISegmentDownloaderInfo
     {
         /// <summary>
-        /// Gets the current position of the segment downloader.
+        /// Bölüt indiricisinin mevcut konumunu getirir.
         /// </summary>
         long CurrentPosition { get; }
 
         /// <summary>
-        /// Gets the remaining transfer bytes count of the segment.
+        /// Bölütün boyutu.
+        /// </summary>
+        long Size { get; }
+
+        /// <summary>
+        /// Bölütü indirmek için kalan byte sayýsýný getirir.
         /// </summary>
         long RemainingTransfer { get; }
 
         /// <summary>
-        /// Gets the downloaded bytes count of the segment.
+        /// Bölütün indirilen byte sayýsýný getirir.
         /// </summary>
         long TransferedDownload { get; }
 
         /// <summary>
-        /// Gets the remaining download time.
+        /// Bölütün kalan tahmini indirme süresini getirir. 
+        /// Kalan byte ve ortalama indirme hýzýna göre bir hesaplama yapar.
         /// </summary>
         TimeSpan? RemainingTime { get; }
 
         /// <summary>
-        /// Gets a value indicating whether [is download finished].
+        /// [Ýndirmenin bitiþine] dair bir deðer döner.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if [is download finished]; otherwise, <c>false</c>.
+        /// Eðer [indirme bitti] ise <c>true</c> ; yoksa, <c>false</c>.
         /// </value>
         bool IsDownloadFinished { get; }
 
         /// <summary>
-        /// Gets the download rate.
+        /// Ýndirme hýzýný getirir.
         /// </summary>
         /// <value>
-        /// The download rate.
+        /// Ýndirme hýzý.
         /// </value>
         double? DownloadRate { get; }
 
         /// <summary>
-        /// Gets the segment download progress.
+        /// Ýndirme yüzdesini getirir.
         /// </summary>
         /// <value>
-        /// The download progress.
+        /// Ýndirme yüzdesi.
         /// </value>
         double DownloadProgress { get; }
 
         /// <summary>
-        /// Gets the start position of the download segment.
+        /// Bölüt indirici için baþlangýç konumu.
         /// </summary>
         /// <value>
-        /// The start position.
+        /// Baþlangýç konumu.
         /// </value>
         long StartPosition { get; }
 
         /// <summary>
-        /// Gets the end position of the download segment.
+        /// Bölüt indirici için bitiþ konumu.
         /// </summary>
         /// <value>
-        /// The end position.
+        /// Bitiþ konumu.
         /// </value>
         long EndPosition { get; }
 
         /// <summary>
-        /// Gets the state of the download segment.
+        /// Bölüt indiricinin durumunu getirir.
         /// </summary>
         /// <value>
-        /// The download segment state.
+        /// Bölüt indirici durumu.
         /// </value>
-        SegmentState State { get; }
+        SegmentState State { get; set; }
 
         /// <summary>
-        /// Gets the last exception.
+        /// Alýnan son hatayý getirir.
         /// </summary>
         /// <value>
-        /// The last exception.
+        /// Alýnan son hata.
         /// </value>
         Exception LastException { get; }
 
         /// <summary>
-        /// Gets the last exception time.
+        /// Alýnan son hatanýn zamanýný getirir.
         /// </summary>
         /// <value>
-        /// The last exception time.
+        /// Alýnan son hatanýn zamaný.
         /// </value>
         DateTime? LastExceptionTime { get; }
 
         /// <summary>
-        /// Gets the download URI of the segment.
+        /// Bölütün indirme yaptýðý adresini getirir.
         /// </summary>
         /// <value>
-        /// The URI.
+        /// Ýndirme adresi.
         /// </value>
         Uri Uri { get; }
 
         /// <summary>
-        /// Gets the download finish date.
+        /// Ýndirmenin bitiþ zamaný.
         /// </summary>
         /// <value>
-        /// The download finish date.
+        /// Ýndirme bitiþ zamaný.
         /// </value>
         DateTime? DownloadFinishDate { get; }
     }

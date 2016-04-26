@@ -3,17 +3,17 @@ namespace Labo.DownloadManager.Segment
     using System;
 
     /// <summary>
-    /// The segment downloader base class.
+    /// Bölüt indirici üs sýnýfý.
     /// </summary>
     public abstract class SegmentDownloaderBase : ISegmentDownloader
     {
         /// <summary>
-        /// Gets the current position of the segment downloader.
+        /// Bölüt indiricisinin mevcut konumunu getirir.
         /// </summary>
         public abstract long CurrentPosition { get; }
 
         /// <summary>
-        /// Gets the remaining transfer bytes count of the segment.
+        /// Bölütü indirmek için kalan byte sayýsýný getirir.
         /// </summary>
         public long RemainingTransfer
         {
@@ -24,10 +24,10 @@ namespace Labo.DownloadManager.Segment
         }
 
         /// <summary>
-        /// Gets a value indicating whether [is download finished].
+        /// [Ýndirmenin bitiþine] dair bir deðer döner.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if [is download finished]; otherwise, <c>false</c>.
+        /// Eðer [indirme bitti] ise <c>true</c>; yoksa, <c>false</c>.
         /// </value>
         public bool IsDownloadFinished
         {
@@ -35,15 +35,16 @@ namespace Labo.DownloadManager.Segment
         }
 
         /// <summary>
-        /// Gets the download rate.
+        /// Ýndirme hýzýný getirir.
         /// </summary>
         /// <value>
-        /// The download rate.
+        /// Ýndirme hýzý.
         /// </value>
-        public abstract double? DownloadRate { get; }
+        public abstract double? DownloadRate { get; protected set; }
 
         /// <summary>
-        /// Gets the remaining download time.
+        /// Bölütün kalan tahmini indirme süresini getirir. 
+        /// Kalan byte sayýsý ve ortalama indirme hýzýna göre bir hesaplama yapar.
         /// </summary>
         public TimeSpan? RemainingTime
         {
@@ -65,7 +66,7 @@ namespace Labo.DownloadManager.Segment
         }
 
         /// <summary>
-        /// Gets the downloaded bytes count of the segment.
+        /// Bölütün indirilen byte sayýsýný getirir.
         /// </summary>
         public long TransferedDownload
         {
@@ -73,108 +74,126 @@ namespace Labo.DownloadManager.Segment
         }
 
         /// <summary>
-        /// Gets the segment download progress.
+        /// Ýndirme yüzdesini getirir.
         /// </summary>
         /// <value>
-        /// The download progress.
+        /// Ýndirme yüzdesi.
         /// </value>
         public double DownloadProgress
         {
             get
             {
-                return EndPosition <= 0 ? 0 : (TransferedDownload / (double)RemainingTransfer * 100.0);
+                return EndPosition <= 0 ? 0 : (TransferedDownload / (double)Size * 100.0);
             }
         }
 
         /// <summary>
-        /// Gets the start position of the download segment.
+        /// Bölüt indirici için baþlangýç konumu.
         /// </summary>
         /// <value>
-        /// The start position.
+        /// Baþlangýç konumu.
         /// </value>
         public abstract long StartPosition { get; }
 
         /// <summary>
-        /// Gets the end position of the download segment.
+        /// Bölüt indirici için bitiþ konumu.
         /// </summary>
         /// <value>
-        /// The end position.
+        /// Bitiþ konumu.
         /// </value>
         public abstract long EndPosition { get; }
 
         /// <summary>
-        /// Reads a sequence of bytes from the current stream and advances 
-        /// the position within the stream by the number of bytes read.
+        /// Mevcut kaynaktan istenen sayýda veriyi okuyup tampon dizisine
+        /// yazdýktan sonra kaynaðýn konumunu okunan byte sayýsý kadar arttýrýr.
         /// </summary>
         /// <param name="buffer">
-        /// An array of bytes that contains the specified byte array with the values which will be replaced 
-        /// by the bytes read from the current source when the method returns.
+        /// Mevcut kaynaktan okunup içerisine aktarýlacak olan tampon dizisi.
         /// </param>
         /// <returns>
-        /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if 
-        /// that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+        /// Kaynaktan okunup tampon dizisinin için aktarýlan byte sayýsý. 
+        /// Bu deðer eðer kaynakta yeterli sayýda veri yoksa talep edilen byte sayýsýndan az dönebilir.
+        /// Eðer kaynaðýn sonuna gelindi ise (0) döner.
         /// </returns>
         public abstract int Download(byte[] buffer);
 
         /// <summary>
-        /// Increases the current position of the segment downloader.
+        /// Bölüt indiricinin mevcut konumunu verilen deðer kadar arttýrýr.
         /// </summary>
-        /// <param name="size">The increase size.</param>
+        /// <param name="size">Artýþ deðeri.</param>
         public abstract void IncreaseCurrentPosition(int size);
 
         /// <summary>
-        /// Sets the error.
+        /// Alýnan hatayý atar.
         /// </summary>
-        /// <param name="exception">The exception.</param>
+        /// <param name="exception">Hata.</param>
         public abstract void SetError(Exception exception);
 
         /// <summary>
-        /// Gets the state of the download segment.
+        /// Bölüt indiricinin durumunu getirir.
         /// </summary>
         /// <value>
-        /// The download segment state.
+        /// Bölüt indirici durumu.
         /// </value>
-        public abstract SegmentState State { get; }
+        public abstract SegmentState State { get; set; }
 
         /// <summary>
-        /// Gets the last exception.
+        /// Alýnan son hatayý getirir.
         /// </summary>
         /// <value>
-        /// The last exception.
+        /// Alýnan son hata.
         /// </value>
         public abstract Exception LastException { get; }
 
         /// <summary>
-        /// Gets the last exception time.
+        /// Alýnan son hatanýn zamanýný getirir.
         /// </summary>
         /// <value>
-        /// The last exception time.
+        /// Alýnan son hatanýn zamaný.
         /// </value>
         public abstract DateTime? LastExceptionTime { get; }
 
         /// <summary>
-        /// Gets the download URI of the segment.
+        /// Bölütün indirme yaptýðý adresini getirir.
         /// </summary>
         /// <value>
-        /// The URI.
+        /// Ýndirme adresi.
         /// </value>
         public abstract Uri Uri { get; }
 
         /// <summary>
-        /// Gets the download finish date.
+        /// Ýndirme kaynaðýný günceller.
+        /// </summary>
+        public abstract void RefreshDownloadStream();
+
+        /// <summary>
+        /// Ýndirmenin bitiþ zamaný.
         /// </summary>
         /// <value>
-        /// The download finish date.
+        /// Ýndirme bitiþ zamaný.
         /// </value>
         public DateTime? DownloadFinishDate { get; private set; }
 
         /// <summary>
-        /// Sets the download finish date.
+        /// Ýndirme bitiþ zamanýný atar.
         /// </summary>
-        /// <param name="date">The finish date.</param>
+        /// <param name="date">Bitiþ zamaný.</param>
         public void SetDownloadFinishDate(DateTime date)
         {
             DownloadFinishDate = date;
+            State = SegmentState.Finished;
+
+            DownloadRate = null;
         }
+
+        /// <summary>
+        /// Bölütün boyutu.
+        /// </summary>
+        public long Size
+        {
+            get { return EndPosition - StartPosition; }
+        }
+
+        public abstract void CalculateCurrentDownloadRate(long currentPosition);
     }
 }

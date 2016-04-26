@@ -8,34 +8,34 @@
     public sealed class SegmentDownloadTaskCollection : List<ISegmentDownloadTask>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SegmentDownloadTaskCollection"/> class.
+        /// Yeni bir <see cref="SegmentDownloadTaskCollection"/> sınıfı örneği yaratır.
         /// </summary>
         public SegmentDownloadTaskCollection()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SegmentDownloadTaskCollection"/> class.
+        /// Yeni bir <see cref="SegmentDownloadTaskCollection"/> sınıfı örneği yaratır.
         /// </summary>
-        /// <param name="collection">The collection.</param>
+        /// <param name="collection">Koleksiyon.</param>
         public SegmentDownloadTaskCollection(IEnumerable<ISegmentDownloadTask> collection)
             : base(collection)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SegmentDownloadTaskCollection"/> class.
+        /// Yeni bir <see cref="SegmentDownloadTaskCollection"/> sınıfı örneği yaratır.
         /// </summary>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
+        /// <param name="capacity">Koleksiyonun ilk hacmi.</param>
         public SegmentDownloadTaskCollection(int capacity)
             : base(capacity)
         {
         }
 
         /// <summary>
-        /// Gets the download task statistics.
+        /// İndirme görevi istatistiklerini getirir.
         /// </summary>
-        /// <returns>The download task statistics.</returns>
+        /// <returns>İndirme görevi istatistikleri.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DownloadTaskStatistics GetDownloadTaskStatistics()
         {
@@ -81,6 +81,18 @@
                            TransferedDownload = transferedDownload,
                            Segments = new SegmentDownloaderInfoCollection(this.Select(x => x.SegmentDownloaderInfo))
                        };
+        }
+
+        /// <summary>
+        /// Bütün bölüt indirme görevlerini duraklatır.
+        /// </summary>
+        public void PauseAll()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                ISegmentDownloadTask segmentDownloadTask = this[i];
+                segmentDownloadTask.Pause();
+            }
         }
     }
 }

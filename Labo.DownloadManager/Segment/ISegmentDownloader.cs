@@ -3,40 +3,47 @@ namespace Labo.DownloadManager.Segment
     using System;
 
     /// <summary>
-    /// The segment downloader interface
+    /// Bölüt indirici arayüzü.
     /// </summary>
     public interface ISegmentDownloader : ISegmentDownloaderInfo
     {
         /// <summary>
-        /// Reads a sequence of bytes from the current stream and advances 
-        /// the position within the stream by the number of bytes read.
+        /// Mevcut kaynaktan istenen sayýda veriyi okuyup tampon dizisine
+        /// yazdýktan sonra kaynaðýn konumunu okunan byte sayýsý kadar arttýrýr.
         /// </summary>
         /// <param name="buffer">
-        /// An array of bytes that contains the specified byte array with the values which will be replaced 
-        /// by the bytes read from the current source when the method returns.
+        /// Mevcut kaynaktan okunup içerisine aktarýlacak olan tampon dizisi.
         /// </param>
         /// <returns>
-        /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if 
-        /// that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+        /// Kaynaktan okunup tampon dizisinin için aktarýlan byte sayýsý. 
+        /// Bu deðer eðer kaynakta yeterli sayýda veri yoksa talep edilen byte sayýsýndan az dönebilir.
+        /// Eðer kaynaðýn sonuna gelindi ise (0) döner.
         /// </returns>
         int Download(byte[] buffer);
 
         /// <summary>
-        /// Increases the current position of the segment downloader.
+        /// Bölüt indiricinin mevcut konumunu verilen deðer kadar arttýrýr.
         /// </summary>
-        /// <param name="size">The increase size.</param>
+        /// <param name="size">Artýþ deðeri.</param>
         void IncreaseCurrentPosition(int size);
 
         /// <summary>
-        /// Sets the error.
+        /// Alýnan hatayý atar.
         /// </summary>
-        /// <param name="exception">The exception.</param>
+        /// <param name="exception">Hata.</param>
         void SetError(Exception exception);
 
         /// <summary>
-        /// Sets the download finish date.
+        /// Ýndirme bitiþ zamanýný atar.
         /// </summary>
-        /// <param name="date">The finish date.</param>
+        /// <param name="date">Bitiþ zamaný.</param>
         void SetDownloadFinishDate(DateTime date);
+
+        /// <summary>
+        /// Ýndirme kaynaðýný günceller.
+        /// </summary>
+        void RefreshDownloadStream();
+
+        void CalculateCurrentDownloadRate(long currentPosition);
     }
 }
